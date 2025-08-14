@@ -45,8 +45,6 @@ Additional Info:
 ================================================================
 Directory Structure
 ================================================================
-.emergent/
-  emergent.yml
 backend/
   .env
   requirements.txt
@@ -57,8 +55,10 @@ frontend/
   src/
     components/
       landing/
+        FloatingShapes.jsx
         Header.jsx
         Sections.jsx
+        v1floatingshapes.jsx
       ui/
         accordion.jsx
         alert-dialog.jsx
@@ -94,6 +94,7 @@ frontend/
         select.jsx
         separator.jsx
         sheet.jsx
+        ShimmerButton.jsx
         skeleton.jsx
         slider.jsx
         sonner.jsx
@@ -116,7 +117,6 @@ frontend/
     App.js
     index.css
     index.js
-  .env
   .gitignore
   components.json
   craco.config.js
@@ -125,7 +125,6 @@ frontend/
   postcss.config.js
   README.md
   tailwind.config.js
-.gitconfig
 .gitignore
 README.md
 test_result.md
@@ -133,13 +132,6 @@ test_result.md
 ================================================================
 Files
 ================================================================
-
-================
-File: .emergent/emergent.yml
-================
-{
-  "env_image_name": "fastapi_react_mongo_shadcn_base_image_cloud_arm:release-11082025-2"
-}
 
 ================
 File: backend/.env
@@ -265,82 +257,20 @@ File: frontend/public/index.html
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
-        <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-        <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+        <meta name="description" content="Eido AI - Your Personal Education Copilot" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-        <title>Emergent | Fullstack App</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+        
+        <!-- ADD THREE.JS LIBRARY -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        
+        <title>Eido AI</title>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="
-                display: flex !important;
-                align-items: center !important;
-                position: fixed !important;
-                bottom: 20px;
-                right: 20px;
-                text-decoration: none;
-                padding: 6px 10px;
-                font-family: -apple-system, BlinkMacSystemFont,
-                    &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell,
-                    &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;,
-                    sans-serif !important;
-                font-size: 12px !important;
-                z-index: 9999 !important;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-                border-radius: 8px !important;
-                background-color: #ffffff !important;
-                border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            "
-        >
-            <div
-                style="display: flex; flex-direction: row; align-items: center"
-            >
-                <img
-                    style="width: 20px; height: 20px; margin-right: 8px"
-                    src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4"
-                />
-                <p
-                    style="
-                        color: #000000;
-                        font-family: -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu,
-                            Cantarell, &quot;Open Sans&quot;,
-                            &quot;Helvetica Neue&quot;, sans-serif !important;
-                        font-size: 12px !important;
-                        align-items: center;
-                        margin-bottom: 0;
-                    "
-                >
-                    Made with Emergent
-                </p>
-            </div>
-        </a>
         <script>
             !(function (t, e) {
                 var o, n, p, r;
@@ -412,10 +342,264 @@ File: frontend/public/index.html
 </html>
 
 ================
+File: frontend/src/components/landing/FloatingShapes.jsx
+================
+import React, { useRef, useEffect } from 'react';
+
+const FloatingShapes = () => {
+  const canvasRef = useRef(null);
+  const mousePosRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let shapes = [];
+
+    // --- MOUSE TRACKING ---
+    const handleMouseMove = (event) => {
+      const rect = canvas.getBoundingClientRect();
+      mousePosRef.current = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+
+    // --- SHAPE INITIALIZATION & RESIZE LOGIC ---
+    const handleResize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+
+      canvas.width = parent.offsetWidth;
+      canvas.height = parent.offsetHeight;
+      mousePosRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
+
+      const shapeSize = 220;
+      const numShapes = 10;
+      const shapeTypes = ['square', 'triangle', 'circle'];
+      
+      const newShapes = [];
+      const minDistance = shapeSize;
+      const maxAttempts = 100;
+
+      for (let i = 0; i < numShapes; i++) {
+        let newShape;
+        let positionFound = false;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          const potentialX = shapeSize / 2 + Math.random() * (canvas.width - shapeSize);
+          const potentialY = shapeSize / 2 + Math.random() * (canvas.height - shapeSize);
+          let isOverlapping = false;
+
+          for (const existingShape of newShapes) {
+            const dx = existingShape.x - potentialX;
+            const dy = existingShape.y - potentialY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < minDistance) {
+              isOverlapping = true;
+              break;
+            }
+          }
+
+          if (!isOverlapping) {
+            newShape = {
+              type: shapeTypes[i % shapeTypes.length],
+              size: shapeSize,
+              rotation: Math.random() * Math.PI * 2,
+              vRotation: (Math.random() - 0.5) * 0.002,
+              x: potentialX,
+              y: potentialY,
+              vx: (Math.random() - 0.5) * 0.6,
+              vy: (Math.random() - 0.5) * 0.6,
+              mass: 1,
+            };
+            positionFound = true;
+            break;
+          }
+        }
+
+        if (!positionFound) {
+          newShape = {
+            type: shapeTypes[i % shapeTypes.length],
+            size: shapeSize,
+            rotation: Math.random() * Math.PI * 2,
+            vRotation: (Math.random() - 0.5) * 0.002,
+            x: shapeSize / 2 + Math.random() * (canvas.width - shapeSize),
+            y: shapeSize / 2 + Math.random() * (canvas.height - shapeSize),
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: (Math.random() - 0.5) * 0.6,
+            mass: 1,
+          };
+        }
+        newShapes.push(newShape);
+      }
+      shapes = newShapes;
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    }
+    handleResize();
+
+    // --- ANIMATION LOOP ---
+    const update = () => {
+      if (canvas.width > 0 && shapes.length > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const lightSource = mousePosRef.current;
+
+        shapes.forEach((shape, i) => {
+          // Update shape position and rotation
+          shape.x += shape.vx;
+          shape.y += shape.vy;
+          shape.rotation += shape.vRotation;
+
+          // Wall collision
+          const radius = shape.size / 2;
+          if (shape.x + radius > canvas.width || shape.x - radius < 0) {
+            shape.vx *= -1;
+          }
+          if (shape.y + radius > canvas.height || shape.y - radius < 0) {
+            shape.vy *= -1;
+          }
+
+          // Shape-to-shape collision
+          for (let j = i + 1; j < shapes.length; j++) {
+              const otherShape = shapes[j];
+              const dx = otherShape.x - shape.x;
+              const dy = otherShape.y - shape.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              const minDistance = (shape.size / 2) + (otherShape.size / 2);
+
+              if (distance < minDistance) {
+                  const angle = Math.atan2(dy, dx);
+                  const sin = Math.sin(angle);
+                  const cos = Math.cos(angle);
+                  const pos0 = { x: 0, y: 0 };
+                  const pos1 = { x: (otherShape.x - shape.x) * cos + (otherShape.y - shape.y) * sin, y: (otherShape.y - shape.y) * cos - (otherShape.x - shape.x) * sin };
+                  const vel0 = { x: shape.vx * cos + shape.vy * sin, y: shape.vy * cos - shape.vx * sin };
+                  const vel1 = { x: otherShape.vx * cos + otherShape.vy * sin, y: otherShape.vy * cos - otherShape.vx * sin };
+                  const vxTotal = vel0.x - vel1.x;
+                  vel0.x = ((shape.mass - otherShape.mass) * vel0.x + 2 * otherShape.mass * vel1.x) / (shape.mass + otherShape.mass);
+                  vel1.x = vxTotal + vel0.x;
+                  const absV = Math.abs(vel0.x) + Math.abs(vel1.x);
+                  const overlap = minDistance - Math.abs(pos0.x - pos1.x);
+                  pos0.x += vel0.x / absV * overlap;
+                  pos1.x += vel1.x / absV * overlap;
+                  const pos0F = { x: pos0.x * cos - pos0.y * sin, y: pos0.y * cos + pos0.x * sin };
+                  const pos1F = { x: pos1.x * cos - pos1.y * sin, y: pos1.y * cos + pos1.x * sin };
+                  otherShape.x = shape.x + pos1F.x;
+                  otherShape.y = shape.y + pos1F.y;
+                  shape.x = shape.x + pos0F.x;
+                  shape.y = shape.y + pos0F.y;
+                  shape.vx = vel0.x * cos - vel0.y * sin;
+                  shape.vy = vel0.y * cos + vel0.x * sin;
+                  otherShape.vx = vel1.x * cos - vel1.y * sin;
+                  otherShape.vy = vel1.y * cos + vel1.x * sin;
+              }
+          }
+
+          ctx.save();
+          ctx.translate(shape.x, shape.y);
+          ctx.rotate(shape.rotation);
+
+          // Dynamic lighting
+          const lightVector = { x: lightSource.x - shape.x, y: lightSource.y - shape.y };
+          const lightDistance = Math.sqrt(lightVector.x * lightVector.x + lightVector.y * lightVector.y);
+          const lightNormal = { x: lightVector.x / lightDistance, y: lightVector.y / lightDistance };
+          const lightRadius = 500; 
+          const intensity = Math.max(0, 1 - lightDistance / lightRadius);
+
+          // Shadow effect
+          ctx.shadowColor = `rgba(0, 0, 0, ${0.5 * intensity})`;
+          ctx.shadowBlur = 30 * intensity;
+          ctx.shadowOffsetX = -lightNormal.x * 15 * intensity;
+          ctx.shadowOffsetY = -lightNormal.y * 15 * intensity;
+
+          // --- 🎨 FINAL: Layered Border Drawing Logic ---
+          const size = shape.size / 2;
+          const outerBorderWidth = 26;
+          const innerBorderWidth = 22;
+          
+          const createShapePath = () => {
+            ctx.beginPath();
+            if (shape.type === 'square') {
+              ctx.rect(-size, -size, shape.size, shape.size);
+            } else if (shape.type === 'circle') {
+              ctx.arc(0, 0, size, 0, Math.PI * 2);
+            } else if (shape.type === 'triangle') {
+              ctx.moveTo(0, -size);
+              ctx.lineTo(size, size);
+              ctx.lineTo(-size, size);
+              ctx.closePath();
+            }
+          };
+
+          // Layer 1: Draw a solid black base for the entire border.
+          ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+          ctx.lineWidth = outerBorderWidth;
+          createShapePath();
+          ctx.stroke();
+
+          // Set composite operation to paint on top of the existing stroke.
+          ctx.globalCompositeOperation = 'source-atop';
+
+          // Layer 2: Paint the darker, outer shine over the entire base.
+          // This gradient is now opaque, fading from medium to dark grey.
+          const outerGradient = ctx.createLinearGradient(-size * lightNormal.x, -size * lightNormal.y, size * lightNormal.x, size * lightNormal.y);
+          outerGradient.addColorStop(0, `rgba(120, 120, 120, ${intensity})`);
+          outerGradient.addColorStop(1, `rgba(40, 40, 40, ${intensity})`);
+          
+          ctx.strokeStyle = outerGradient;
+          ctx.lineWidth = outerBorderWidth;
+          createShapePath();
+          ctx.stroke();
+
+          // Layer 3: Paint the brighter, inner shine on top of the outer shine.
+          // This gradient is also opaque, fading from white to light grey.
+          const innerGradient = ctx.createLinearGradient(-size * lightNormal.x, -size * lightNormal.y, size * lightNormal.x, size * lightNormal.y);
+          innerGradient.addColorStop(0, `rgba(255, 255, 255, ${0.8 * intensity})`);
+          innerGradient.addColorStop(1, `rgba(180, 180, 180, ${0.8 * intensity})`);
+
+          ctx.strokeStyle = innerGradient;
+          ctx.lineWidth = innerBorderWidth;
+          createShapePath();
+          ctx.stroke();
+          
+          ctx.restore();
+        });
+      }
+
+      animationFrameId = window.requestAnimationFrame(update);
+    };
+
+    update();
+
+    // --- CLEANUP ---
+    return () => {
+      if (canvas.parentElement) {
+        resizeObserver.unobserve(canvas.parentElement);
+      }
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+};
+
+export default FloatingShapes;
+
+================
 File: frontend/src/components/landing/Header.jsx
 ================
 import React, { useEffect, useState } from "react";
-import { Button } from "../../components/ui/button";
+import ShimmerButton from "../../components/ui/ShimmerButton";
 import { NavigationMenu } from "../../components/ui/navigation-menu"; // eslint-disable-line
 
 const navItems = [
@@ -424,50 +608,55 @@ const navItems = [
   { id: "testimonials", label: "Testimonials" },
   { id: "contact", label: "Contact" },
 ];
-
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[backdrop-filter,box-shadow,background-color] duration-300 ${
-        scrolled ? "backdrop-blur-xl bg-white/70 shadow-sm" : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-4 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 p-3 md:p-4 font-roboto">
+      <div
+        className={`mx-auto max-w-[1280px] flex items-center justify-between px-6 py-2 rounded-full border transition-all duration-300 ${
+          scrolled
+            ? "border-neutral-700/50 backdrop-blur-xl bg-gradient-to-b from-neutral-900/50 to-neutral-950/40 shadow-lg"
+            : "border-transparent bg-transparent"
+        }`}
+      >
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-md" />
-          <span className="text-[18px] font-semibold tracking-tight">Eido AI</span>
+          <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
+          <span className="text-[18px] font-semibold tracking-tight text-white">Eido AI</span>
         </div>
-        <nav className="hidden md:flex items-center gap-8 text-[14px]">
+        <nav className="hidden md:flex items-center gap-8">
+          {/* --- NAVIGATION ITEMS UPDATED FOR FLIP ANIMATION --- */}
           {navItems.map((n) => (
-            <button
-              key={n.id}
-              onClick={() => scrollTo(n.id)}
-              className="text-neutral-700 hover:text-black transition-colors"
-            >
-              {n.label}
-            </button>
+            <div key={n.id} className="flip-container" onClick={() => scrollTo(n.id)}>
+              <button
+                className="flipper text-neutral-300 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest"
+              >
+                <span className="front">{n.label}</span>
+                <span className="back">{n.label}</span>
+              </button>
+            </div>
           ))}
+          {/* --- END NAVIGATION ITEMS UPDATE --- */}
         </nav>
         <div className="flex items-center gap-3">
-          <Button
+          <ShimmerButton
             onClick={() => scrollTo("cta")}
-            className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+            variant="outline"
+            className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100 rounded-full"
           >
-            Create your free account
-          </Button>
+            <span className="uppercase text-xs tracking-widest font-bold">
+              Create your free account
+            </span>
+          </ShimmerButton>
         </div>
       </div>
     </header>
@@ -479,12 +668,14 @@ File: frontend/src/components/landing/Sections.jsx
 ================
 import React, { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
+import ShimmerButton from "../../components/ui/ShimmerButton";
 import { Card, CardContent } from "../../components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
 import { useToast } from "../../hooks/use-toast";
 import { howSteps, features, testimonials } from "../../mock/mock";
+import FloatingShapes from "./FloatingShapes";
 import {
   FileUp,
   MessageSquare,
@@ -493,7 +684,8 @@ import {
   Chrome,
   Quote,
   ShieldCheck,
-  Zap,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 const iconMap = { FileUp, MessageSquare, GraduationCap };
@@ -509,78 +701,111 @@ export function Hero() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <div className="relative pt-28 md:pt-32 pb-16 md:pb-24 bg-white">
-      {/* Decorative ring */}
+    // Restore the bg-primary class here to bring back the base background color
+    <div className="relative pt-28 md:pt-32 bg-primary text-primary-foreground h-[750px] md:h-[650px] overflow-hidden">
+      {/* --- FIX START --- */}
+      {/* This wrapper holds the floating shapes and sits behind the main content but in front of the decorative circles */}
+      <div className="absolute inset-0 z-0">
+          <FloatingShapes />
+      </div>
+      {/* --- FIX END --- */}
+
+      {/* The other decorative elements, now with a lower z-index to be behind the shapes */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full border border-black/5" />
-        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_60%)]" />
+        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full border border-neutral-700" />
+        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_60%)]" />
       </div>
 
-      <SectionWrap>
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h1 className="text-4xl md:text-6xl leading-[1.05] tracking-tight font-light text-black">
+      <SectionWrap className="relative z-10">
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          <div className={`transition-all duration-700 ${mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>
+            <h1 className="text-4xl md:text-6xl leading-[1.05] tracking-tight font-light text-white">
               Your personal education copilot
             </h1>
-            <p className="mt-5 text-neutral-600 text-lg max-w-[44ch]">
+            <p className="mt-5 text-neutral-300 text-lg max-w-[44ch]">
               Stop searching the entire web for answers. Get instant, accurate, and citable responses
               directly from your course materials.
             </p>
             <div className="mt-8 flex items-center gap-3">
-              <Button
+              <ShimmerButton
                 onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
-                className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25"
+                className="bg-white text-black shadow-lg shadow-white/10 hover:bg-neutral-200"
               >
                 Create your free account
-              </Button>
-              <Button
+              </ShimmerButton>
+              <ShimmerButton
                 variant="outline"
                 onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })}
-                className="border-neutral-300 hover:bg-neutral-100"
+                className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100"
               >
                 See how it works
-              </Button>
+              </ShimmerButton>
             </div>
             <div className="mt-6 flex items-center gap-3">
-              <Badge className="bg-black text-white">Private by default</Badge>
-              <Badge variant="secondary" className="border border-neutral-200">Citations included</Badge>
-              <Badge variant="secondary" className="border border-neutral-200">Chrome extension</Badge>
+              <Badge className="bg-white/10 text-white border-none">Private by default</Badge>
+              <Badge variant="secondary" className="bg-white/10 text-white border-none">Citations included</Badge>
+              <Badge variant="secondary" className="bg-white/10 text-white border-none">Chrome extension</Badge>
             </div>
           </div>
           <div>
-            {/* Glass card mock */}
-            <Card className={`border border-neutral-200/60 bg-white/70 backdrop-blur-xl transition-all duration-700 ${
-              mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-            }`}>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700" />
-                  <div>
-                    <div className="text-sm font-semibold">Oracle Chat</div>
-                    <div className="text-xs text-neutral-500">Eido AI</div>
-                  </div>
-                </div>
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl bg-neutral-50 border border-neutral-200 p-4 text-sm shadow-sm">
-                    "Explain the difference between aerobic and anaerobic respiration."
-                  </div>
-                  <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm">
-                    {features.oracle.oracleExample}
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {features.oracle.citations.map((c, i) => (
-                        <span
-                          key={i}
-                          className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]"
-                        >
-                          <ShieldCheck size={14} /> {c.label}
-                          <span className="opacity-60">{c.meta}</span>
-                        </span>
-                      ))}
+            {/* Clipping container for the card */}
+            <div className="max-h-[430px] overflow-hidden rounded-t-xl">
+              <Card className={`border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-700 ${
+                mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              }`}>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3">
+                    <img src="/eido-icon.png" alt="Eido AI Logo" className="h-9 w-9 rounded-md" />
+                    <div>
+                      <div className="text-sm font-semibold text-white">Oracle Chat</div>
+                      <div className="text-xs text-neutral-400">Eido AI</div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="mt-5 space-y-4 flex flex-col">
+                    <div className="rounded-2xl bg-neutral-800 border border-neutral-700 p-4 text-sm shadow-sm text-neutral-200 self-end max-w-[85%]">
+                      "Explain the difference between aerobic and anaerobic respiration."
+                    </div>
+                    <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm self-start max-w-[85%]">
+                      {features.oracle.oracleExample}
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {features.oracle.citations.map((c, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]"
+                          >
+                            <ShieldCheck size={14} /> {c.label}
+                            <span className="opacity-60">{c.meta}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="rounded-2xl bg-neutral-800 border border-neutral-700 p-4 text-sm shadow-sm text-neutral-200 self-end max-w-[85%]">
+                      "Can you give me a study guide for the upcoming midterm?"
+                    </div>
+                    <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm self-start max-w-[85%]">
+                      Of course. I've generated a study guide focusing on key concepts from Lecture 01-05 and your uploaded readings. I've prioritized topics you've asked about before.
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
+                          <ShieldCheck size={14} /> Midterm_Study_Guide.pdf
+                        </span>
+                      </div>
+                    </div>
+                    <div className="rounded-2xl bg-neutral-800 border border-neutral-700 p-4 text-sm shadow-sm text-neutral-200 self-end max-w-[85%]">
+                      "What are the main points from last week's reading on photosynthesis?"
+                    </div>
+                    <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm self-start max-w-[85%]">
+                      The reading "Photosynthesis Unveiled" (Ch. 4) emphasizes two main stages: the light-dependent reactions that produce ATP and NADPH, and the Calvin cycle, which uses that energy to synthesize glucose.
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
+                          <ShieldCheck size={14} /> Photosynthesis...
+                          <span className="opacity-60">Ch. 4, p. 12</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </SectionWrap>
@@ -590,51 +815,47 @@ export function Hero() {
 
 export function HowItWorks() {
   return (
-    <SectionWrap id="how" className="py-24">
-      <h2 className="text-3xl md:text-5xl font-light tracking-tight">How it works</h2>
-      <div className="mt-12 grid md:grid-cols-3 gap-8">
-        {howSteps.map((s) => {
-          const Icon = iconMap[s.icon] || FileUp;
-          return (
-            <Card key={s.id} className="border-neutral-200 hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="h-12 w-12 rounded-xl bg-neutral-100 border border-neutral-200 flex items-center justify-center">
-                  <Icon className="text-blue-600" size={22} />
-                </div>
-                <h3 className="mt-5 text-xl font-semibold">{s.title}</h3>
-                <p className="mt-2 text-neutral-600">{s.description}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
+    <div id="how" className="bg-gradient-to-b from-primary to-black py-24">
+      <div className="mx-auto max-w-[1600px] px-12">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2 h-[500px] bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl">
+            {/* Placeholder for 66% width image */}
+          </div>
+          <div className="col-span-1 h-[500px] bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl">
+            {/* Placeholder for 33% width image */}
+          </div>
+        </div>
       </div>
-    </SectionWrap>
+    </div>
   );
 }
 
 export function Features() {
+  const times = Array.from({ length: 10 }, (_, i) => `${i + 7 < 12 ? i + 7 : (i + 7) % 12 || 12} ${i + 7 < 12 ? 'AM' : 'PM'}`);
+  const days = ["Sun 10", "Mon 11", "Tue 12", "Wed 13", "Thu 14", "Fri 15", "Sat 16"];
+
   return (
-    <div id="features" className="py-24 bg-neutral-50">
+    <div id="features" className="py-24 bg-gradient-to-b from-black to-neutral-900">
       <SectionWrap>
         {/* Oracle */}
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-stretch">
           <div>
-            <h3 className="text-2xl md:text-4xl font-light tracking-tight">
+            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
               {features.oracle.title}
             </h3>
-            <p className="mt-4 text-neutral-600">{features.oracle.subtitle}</p>
+            <p className="mt-4 text-neutral-400">{features.oracle.subtitle}</p>
             <div className="mt-6 grid gap-4">
-              <div className="rounded-xl border border-neutral-200 p-4 bg-white">
-                <div className="text-xs uppercase text-neutral-500">Generic AI</div>
-                <p className="mt-2 text-neutral-700">{features.oracle.genericExample}</p>
+              <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-950">
+                <div className="text-xs uppercase text-neutral-400">Generic AI</div>
+                <p className="mt-2 text-neutral-300">{features.oracle.genericExample}</p>
               </div>
-              <div className="rounded-xl border border-blue-200 p-4 bg-gradient-to-b from-white to-blue-50">
-                <div className="text-xs uppercase text-blue-600">Oracle (Cited)</div>
-                <p className="mt-2 text-neutral-800">{features.oracle.oracleExample}</p>
+              <div className="rounded-xl border border-blue-400/30 p-4 bg-gradient-to-b from-blue-950/50 to-neutral-950">
+                <div className="text-xs uppercase text-blue-400 font-semibold">Oracle (Cited)</div>
+                <p className="mt-2 text-neutral-200">{features.oracle.oracleExample}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {features.oracle.citations.map((c, i) => (
-                    <Badge key={i} variant="secondary" className="border-blue-200">
-                      <ShieldCheck size={14} className="mr-1" /> {c.label}
+                    <Badge key={i} variant="secondary" className="bg-white/10 border-none text-neutral-200">
+                      <ShieldCheck size={14} className="mr-1 text-blue-400" /> {c.label}
                     </Badge>
                   ))}
                 </div>
@@ -642,15 +863,15 @@ export function Features() {
             </div>
           </div>
           <div>
-            <Card className="border-neutral-200 bg-white/70 backdrop-blur-xl">
+            <Card className="h-full border-neutral-800 bg-white/5 backdrop-blur-xl">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
-                  <MessageSquare size={18} className="text-blue-600" />
-                  <div className="text-sm font-semibold">Oracle Knowledge Base</div>
+                  <MessageSquare size={18} className="text-blue-400" />
+                  <div className="text-sm font-semibold text-white">Oracle Knowledge Base</div>
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                   {["Slides", "Notes", "Assignments", "Readings"].map((t) => (
-                    <div key={t} className="rounded-lg border border-neutral-200 p-3 bg-neutral-50">
+                    <div key={t} className="rounded-lg border border-neutral-800 p-3 bg-neutral-900 text-neutral-300">
                       {t}
                     </div>
                   ))}
@@ -661,52 +882,103 @@ export function Features() {
         </div>
 
         {/* Calendar */}
-        <div className="mt-24 grid md:grid-cols-2 gap-12 items-center">
+        <div className="mt-24 grid md:grid-cols-2 gap-12 items-stretch">
+          <div className="h-full">
+            <div className="h-full flex flex-col border border-neutral-800 rounded-xl bg-neutral-950/50">
+              {/* Calendar Header */}
+              <div className="flex items-center justify-between p-4 border-b border-neutral-800">
+                <div className="flex items-center gap-4">
+                  <h4 className="font-semibold text-white text-sm">Aug 10 - Aug 16, 2025</h4>
+                  <div className="flex items-center gap-2 text-neutral-400">
+                    <button className="hover:text-white"><ChevronLeft size={16}/></button>
+                    <button className="hover:text-white"><ChevronRight size={16}/></button>
+                  </div>
+                  <button className="text-xs font-semibold border border-neutral-700 rounded-md px-3 py-1 hover:bg-neutral-800 text-neutral-200">Today</button>
+                </div>
+                <div className="flex items-center text-xs font-semibold border border-neutral-800 rounded-md">
+                   <button className="px-3 py-1 text-neutral-400 hover:bg-neutral-800 rounded-l-md">Day</button>
+                   <button className="px-3 py-1 text-white bg-neutral-800 border-x border-neutral-700">Week</button>
+                   <button className="px-3 py-1 text-neutral-400 hover:bg-neutral-800 rounded-r-md">Month</button>
+                </div>
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="flex-1 grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] text-xs text-neutral-400 relative">
+                <div className="row-start-2 pr-2 text-right">
+                  {times.map(t => <div key={t} className="h-9 -mt-2">{t}</div>)}
+                </div>
+                <div className="col-start-2 grid grid-cols-7">
+                   {days.map((d, i) => <div key={i} className={`p-2 text-center border-b border-l border-neutral-800 ${i === 0 ? 'border-l-0' : ''}`}>
+                    <span className="text-white">{d.split(' ')[0]}</span>
+                    <div className={`mt-1 h-7 w-7 flex items-center justify-center rounded-full mx-auto ${d.includes('12') ? 'bg-blue-600 text-white' : 'text-neutral-200'}`}>{d.split(' ')[1]}</div>
+                   </div>)}
+                </div>
+                <div className="col-start-2 row-start-2 grid grid-cols-7 grid-rows-10 border-t border-neutral-800">
+                  {/* Grid Lines */}
+                  {Array.from({ length: 70 }).map((_, i) => <div key={i} className={`border-r border-b border-neutral-800 ${ (i + 1) % 7 === 0 ? 'border-r-0' : '' }`}></div>)}
+                  {/* Events */}
+                  <div className="absolute inset-0 grid grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
+                    <div className="col-start-2 row-start-2 grid grid-cols-7 grid-rows-10">
+                       <div className="col-start-2 row-start-3 row-span-2 bg-blue-900/70 border border-blue-500 rounded-lg p-2 overflow-hidden">
+                        <p className="text-white font-semibold">Midterm Review</p>
+                        <p className="text-blue-200">Biology 101</p>
+                       </div>
+                       <div className="col-start-4 row-start-5 row-span-1 bg-green-900/70 border border-green-500 rounded-lg p-2">
+                        <p className="text-white font-semibold">Problem Set 3 Due</p>
+                       </div>
+                       <div className="col-start-6 row-start-7 row-span-2 bg-purple-900/70 border border-purple-500 rounded-lg p-2 overflow-hidden">
+                        <p className="text-white font-semibold">Project Meeting</p>
+                        <p className="text-purple-200">CS Capstone</p>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div>
-            <Card className="border-neutral-200">
+            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
+              {features.calendar.title}
+            </h3>
+            <p className="mt-4 text-neutral-400">{features.calendar.subtitle}</p>
+            <Card className="mt-6 border-neutral-800">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
-                  <CalendarIcon size={18} className="text-blue-600" />
-                  <div className="text-sm font-semibold">Auto-Populated Calendar</div>
+                  <CalendarIcon size={18} className="text-blue-400" />
+                  <div className="text-sm font-semibold text-white">Auto-Populated Calendar</div>
                 </div>
                 <div className="mt-4 grid gap-3">
                   {features.calendar.sampleDates.map((d, i) => (
-                    <div key={i} className="flex items-center justify-between rounded-lg border border-neutral-200 p-3 bg-white">
-                      <span className="font-medium">{d.label}</span>
-                      <span className="text-blue-600 font-semibold">{d.date}</span>
+                    <div key={i} className="flex items-center justify-between rounded-lg border border-neutral-800 p-3 bg-neutral-950">
+                      <span className="font-medium text-neutral-200">{d.label}</span>
+                      <span className="text-blue-400 font-semibold">{d.date}</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
           </div>
-          <div>
-            <h3 className="text-2xl md:text-4xl font-light tracking-tight">
-              {features.calendar.title}
-            </h3>
-            <p className="mt-4 text-neutral-600">{features.calendar.subtitle}</p>
-          </div>
         </div>
 
         {/* Extension */}
         <div className="mt-24 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h3 className="text-2xl md:text-4xl font-light tracking-tight">
+            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
               {features.extension.title}
             </h3>
-            <p className="mt-4 text-neutral-600">{features.extension.subtitle}</p>
-            <div className="mt-6 flex items-center gap-3 text-sm text-neutral-600">
-              <Chrome className="text-blue-600" size={18} /> Chrome Extension (placeholder)
+            <p className="mt-4 text-neutral-400">{features.extension.subtitle}</p>
+            <div className="mt-6 flex items-center gap-3 text-sm text-neutral-400">
+              <Chrome className="text-blue-400" size={18} /> Chrome Extension (placeholder)
             </div>
           </div>
           <div>
-            <Card className="border-neutral-200 bg-white/70 backdrop-blur-xl">
+            <Card className="border-neutral-800 bg-white/5 backdrop-blur-xl">
               <CardContent className="p-6">
-                <div className="rounded-xl border border-neutral-200 p-4 bg-neutral-50">
-                  <div className="text-sm font-semibold">Browser Toolbar</div>
-                  <div className="mt-3 h-10 rounded-md bg-white border border-neutral-200 flex items-center px-3 gap-2">
-                    <div className="h-6 w-6 rounded bg-gradient-to-br from-blue-500 to-blue-700" />
-                    <span className="text-sm text-neutral-700">Oracle Quick Ask…</span>
+                <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-950">
+                  <div className="text-sm font-semibold text-white">Browser Toolbar</div>
+                  <div className="mt-3 h-10 rounded-md bg-neutral-900 border border-neutral-800 flex items-center px-3 gap-2">
+                    <img src="/eido-icon.png" alt="Eido AI Logo" className="h-6 w-6 rounded-md" />
+                    <span className="text-sm text-neutral-400">Oracle Quick Ask…</span>
                   </div>
                 </div>
               </CardContent>
@@ -718,43 +990,37 @@ export function Features() {
   );
 }
 
+const TestimonialCard = ({ t }) => (
+  <Card className="w-[350px] shrink-0 border-neutral-800 bg-neutral-900 hover:bg-neutral-800/50">
+    <CardContent className="p-6">
+      <Quote className="text-blue-400" size={20} />
+      <p className="mt-4 text-neutral-300 h-20">{t.quote}</p>
+      <div className="mt-6 text-sm font-semibold text-white">{t.name}</div>
+      <div className="text-xs text-neutral-500">{t.role}</div>
+    </CardContent>
+  </Card>
+);
+
 export function Testimonials() {
+  const firstRow = testimonials.slice(0, 6);
+  const secondRow = testimonials.slice(6, 12);
+
   return (
-    <SectionWrap id="testimonials" className="py-24">
-      <h2 className="text-3xl md:text-5xl font-light tracking-tight">What students say</h2>
-      <div className="mt-12 grid md:grid-cols-3 gap-8">
-        {testimonials.map((t, i) => (
-          <Card key={i} className="border-neutral-200 hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <Quote className="text-blue-600" size={20} />
-              <p className="mt-4 text-neutral-700">{t.quote}</p>
-              <div className="mt-6 text-sm font-semibold">{t.name}</div>
-              <div className="text-xs text-neutral-500">{t.role}</div>
-            </CardContent>
-          </Card>
-        ))}
+    <section id="testimonials" className="py-24 space-y-6 bg-gradient-to-b from-neutral-900 to-black">
+      <div className="overflow-hidden">
+        <div className="w-max flex gap-6 animate-marquee-right">
+          {[...firstRow, ...firstRow].map((t, i) => <TestimonialCard t={t} key={`a-${i}`} />)}
+        </div>
       </div>
-    </SectionWrap>
+      <div className="overflow-hidden">
+        <div className="w-max flex gap-6 animate-marquee-left">
+          {[...secondRow, ...secondRow].map((t, i) => <TestimonialCard t={t} key={`c-${i}`} />)}
+        </div>
+      </div>
+    </section>
   );
 }
 
-export function FAQ() {
-  return (
-    <SectionWrap className="py-24">
-      <h2 className="text-3xl md:text-5xl font-light tracking-tight">Frequently asked questions</h2>
-      <Accordion type="single" collapsible className="mt-10">
-        {features.faqs.map((f, idx) => (
-          <AccordionItem key={idx} value={`item-${idx}`}>
-            <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
-            <AccordionContent className="text-neutral-600">
-              {f.a}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </SectionWrap>
-  );
-}
 
 export function FinalCTA() {
   const { toast } = useToast();
@@ -772,12 +1038,12 @@ export function FinalCTA() {
   };
 
   return (
-    <div id="cta" className="py-24 bg-gradient-to-b from-neutral-50 to-white">
+    <div id="cta" className="py-24 bg-gradient-to-b from-black to-neutral-900">
       <SectionWrap>
-        <div className="rounded-2xl border border-neutral-200 bg-white/70 backdrop-blur-xl p-8 md:p-12 relative overflow-hidden">
-          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-blue-600/10 blur-3xl" />
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight">Elevate your education today</h2>
-          <p className="mt-3 text-neutral-600 max-w-[52ch]">
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-8 md:p-12 relative overflow-hidden">
+          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white">Elevate your education today</h2>
+          <p className="mt-3 text-neutral-400 max-w-[52ch]">
             Join thousands of students studying smarter, not harder.
           </p>
           <form onSubmit={onSubmit} className="mt-8 flex flex-col md:flex-row gap-3">
@@ -785,7 +1051,7 @@ export function FinalCTA() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
-              className="h-12"
+              className="h-12 bg-neutral-900 border-neutral-700 text-white"
               required
             />
             <Input
@@ -793,12 +1059,12 @@ export function FinalCTA() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
-              className="h-12"
+              className="h-12 bg-neutral-900 border-neutral-700 text-white"
               required
             />
-            <Button type="submit" className="h-12 bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">
+            <ShimmerButton type="submit" className="h-12 bg-white hover:bg-neutral-200 text-black shadow-lg shadow-white/10">
               Sign up for free
-            </Button>
+            </ShimmerButton>
           </form>
           <div className="mt-3 text-xs text-neutral-500">We’ll never share your email.</div>
         </div>
@@ -809,22 +1075,204 @@ export function FinalCTA() {
 
 export function Footer() {
   return (
-    <footer id="contact" className="py-16 border-t border-neutral-200">
+    <footer id="contact" className="py-16 bg-gradient-to-b from-neutral-900 to-black">
       <SectionWrap>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700" />
+            <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
             <div>
-              <div className="font-semibold">Eido AI</div>
-              <div className="text-xs text-neutral-500">Your personal education copilot</div>
+              <div className="font-semibold text-white">Eido AI</div>
+              <div className="text-xs text-neutral-400">Your personal education copilot</div>
             </div>
           </div>
-          <div className="text-sm text-neutral-600">© {new Date().getFullYear()} Eido AI. All rights reserved.</div>
+          <div className="text-sm text-neutral-400">© 2025 Eido AI. All rights reserved.</div>
         </div>
       </SectionWrap>
     </footer>
   );
 }
+
+================
+File: frontend/src/components/landing/v1floatingshapes.jsx
+================
+import React, { useRef, useEffect } from 'react';
+
+const FloatingShapes = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let shapes = []; 
+
+    const handleResize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+
+      canvas.width = parent.offsetWidth;
+      canvas.height = parent.offsetHeight;
+
+      const shapeSize = 220; 
+      const numShapes = 7; 
+      
+      shapes = Array.from({ length: numShapes }).map((_, index) => {
+        const shapeTypes = ['square', 'triangle', 'circle'];
+        return {
+          type: shapeTypes[index % shapeTypes.length],
+          size: shapeSize,
+          rotation: Math.random() * Math.PI * 2,
+          vRotation: (Math.random() - 0.5) * 0.002,
+          x: shapeSize / 2 + Math.random() * (canvas.width - shapeSize),
+          y: shapeSize / 2 + Math.random() * (canvas.height - shapeSize),
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          mass: 1,
+        }
+      });
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    }
+    
+    handleResize();
+
+    const update = () => {
+      if (canvas.width > 0 && shapes.length > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Define the light source position (top right)
+        const lightSource = { x: canvas.width, y: 0 };
+
+        shapes.forEach((shape, i) => {
+          shape.x += shape.vx;
+          shape.y += shape.vy;
+          shape.rotation += shape.vRotation;
+
+          const radius = shape.size / 2;
+          if (shape.x + radius > canvas.width || shape.x - radius < 0) {
+            shape.vx *= -1;
+          }
+          if (shape.y + radius > canvas.height || shape.y - radius < 0) {
+            shape.vy *= -1;
+          }
+
+          for (let j = i + 1; j < shapes.length; j++) {
+              const otherShape = shapes[j];
+              const dx = otherShape.x - shape.x;
+              const dy = otherShape.y - shape.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              const minDistance = (shape.size / 2) + (otherShape.size / 2);
+
+              if (distance < minDistance) {
+                  const angle = Math.atan2(dy, dx);
+                  const sin = Math.sin(angle);
+                  const cos = Math.cos(angle);
+                  const pos0 = { x: 0, y: 0 };
+                  const pos1 = { x: (otherShape.x - shape.x) * cos + (otherShape.y - shape.y) * sin, y: (otherShape.y - shape.y) * cos - (otherShape.x - shape.x) * sin };
+                  const vel0 = { x: shape.vx * cos + shape.vy * sin, y: shape.vy * cos - shape.vx * sin };
+                  const vel1 = { x: otherShape.vx * cos + otherShape.vy * sin, y: otherShape.vy * cos - otherShape.vx * sin };
+                  const vxTotal = vel0.x - vel1.x;
+                  vel0.x = ((shape.mass - otherShape.mass) * vel0.x + 2 * otherShape.mass * vel1.x) / (shape.mass + otherShape.mass);
+                  vel1.x = vxTotal + vel0.x;
+                  const absV = Math.abs(vel0.x) + Math.abs(vel1.x);
+                  const overlap = minDistance - Math.abs(pos0.x - pos1.x);
+                  pos0.x += vel0.x / absV * overlap;
+                  pos1.x += vel1.x / absV * overlap;
+                  const pos0F = { x: pos0.x * cos - pos0.y * sin, y: pos0.y * cos + pos0.x * sin };
+                  const pos1F = { x: pos1.x * cos - pos1.y * sin, y: pos1.y * cos + pos1.x * sin };
+                  otherShape.x = shape.x + pos1F.x;
+                  otherShape.y = shape.y + pos1F.y;
+                  shape.x = shape.x + pos0F.x;
+                  shape.y = shape.y + pos0F.y;
+                  shape.vx = vel0.x * cos - vel0.y * sin;
+                  shape.vy = vel0.y * cos + vel0.x * sin;
+                  otherShape.vx = vel1.x * cos - vel1.y * sin;
+                  otherShape.vy = vel1.y * cos + vel1.x * sin;
+              }
+          }
+          
+          ctx.save();
+          ctx.translate(shape.x, shape.y);
+          ctx.rotate(shape.rotation);
+          
+          // --- DYNAMIC LIGHTING LOGIC ---
+          const lightVector = { x: lightSource.x - shape.x, y: lightSource.y - shape.y };
+          const lightDistance = Math.sqrt(lightVector.x * lightVector.x + lightVector.y * lightVector.y);
+          const lightNormal = { x: lightVector.x / lightDistance, y: lightVector.y / lightDistance };
+          
+          const shadowOffsetX = -lightNormal.x * 15;
+          const shadowOffsetY = -lightNormal.y * 15;
+          
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+          ctx.shadowBlur = 30;
+          ctx.shadowOffsetX = shadowOffsetX;
+          ctx.shadowOffsetY = shadowOffsetY;
+          // --- END DYNAMIC LIGHTING LOGIC ---
+
+          ctx.beginPath();
+          ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+          ctx.lineWidth = 22;
+          const size = shape.size / 2;
+
+          if (shape.type === 'square') {
+            ctx.rect(-size, -size, shape.size, shape.size);
+          } else if (shape.type === 'circle') {
+            ctx.arc(0, 0, size, 0, Math.PI * 2);
+          } else if (shape.type === 'triangle') {
+            ctx.moveTo(-size, -size);
+            ctx.lineTo(size, -size);
+            ctx.lineTo(-size, size);
+            ctx.closePath();
+          }
+          ctx.stroke();
+
+          // --- DYNAMIC SHINE EFFECT ---
+          ctx.globalCompositeOperation = 'source-atop';
+          const gradient = ctx.createLinearGradient(
+            -size * lightNormal.x, -size * lightNormal.y, 
+            size * lightNormal.x, size * lightNormal.y
+          );
+          gradient.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
+          gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = gradient;
+
+          if (shape.type === 'square') {
+            ctx.fillRect(-size, -size, shape.size, shape.size);
+          } else if (shape.type === 'circle') {
+            ctx.beginPath();
+            ctx.arc(0, 0, size - ctx.lineWidth / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (shape.type === 'triangle') {
+             ctx.fill();
+          }
+          // --- END DYNAMIC SHINE EFFECT ---
+
+          ctx.restore();
+        });
+      }
+
+      animationFrameId = window.requestAnimationFrame(update);
+    };
+
+    update();
+
+    return () => {
+      if (canvas.parentElement) {
+        resizeObserver.unobserve(canvas.parentElement);
+      }
+      window.cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+};
+
+export default FloatingShapes;
 
 ================
 File: frontend/src/components/ui/accordion.jsx
@@ -3368,6 +3816,44 @@ export {
 }
 
 ================
+File: frontend/src/components/ui/ShimmerButton.jsx
+================
+import React from "react";
+import { Button } from "./button";
+import { cn } from "../../lib/utils";
+
+/**
+ * A button with a shimmer/spotlight effect that follows the cursor on hover.
+ */
+const ShimmerButton = React.forwardRef(
+  ({ className, children, ...props }, ref) => {
+    const handleMouseMove = (e) => {
+      const { currentTarget: target } = e;
+      const rect = target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      target.style.setProperty("--x", `${x}px`);
+      target.style.setProperty("--y", `${y}px`);
+    };
+
+    return (
+      <Button
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        className={cn("shimmer-button", className)}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
+);
+
+ShimmerButton.displayName = "ShimmerButton";
+
+export default ShimmerButton;
+
+================
 File: frontend/src/components/ui/skeleton.jsx
 ================
 import { cn } from "../../lib/utils"
@@ -4132,6 +4618,60 @@ export const testimonials = [
     quote:
       "I love how specific the answers are—it's like chatting with my course, not the internet.",
   },
+  {
+    name: "David L.",
+    role: "Medical Student",
+    quote:
+      "Generating flashcards from my lecture PDFs is incredibly fast and effective for studying.",
+  },
+  {
+    name: "Chloe M.",
+    role: "Law Student",
+    quote:
+      "Being able to ask questions about specific case files and get cited answers is indispensable.",
+  },
+  {
+    name: "Ethan P.",
+    role: "Engineering Student",
+    quote:
+      "Eido helps me quickly find formulas and concepts from past assignments. It's my go-to study tool.",
+  },
+  {
+    name: "Olivia R.",
+    role: "History Major",
+    quote:
+      "The ability to consolidate all my readings and notes into one searchable place is amazing.",
+  },
+  {
+    name: "Ben S.",
+    role: "PhD Candidate",
+    quote:
+      "I use this for my literature reviews. Asking the Oracle complex questions saves me so much time.",
+  },
+  {
+    name: "Mia W.",
+    role: "Business Student",
+    quote:
+      "The Chrome extension is fantastic for quick questions while I'm doing research online.",
+  },
+   {
+    name: "Noah G.",
+    role: "Art History Student",
+    quote:
+      "It's brilliant for finding specific details about artworks across dozens of lecture slides.",
+  },
+  {
+    name: "Isabella H.",
+    role: "Psychology Student",
+    quote:
+      "Creating practice quizzes based on my actual course material has been key to my exam prep.",
+  },
+  {
+    name: "Liam F.",
+    role: "Physics Undergrad",
+    quote:
+      "Finally, I don't have to skim through 20 different PDFs to find one equation. A total lifesaver.",
+  },
 ];
 
 ================
@@ -4179,34 +4719,34 @@ import React, { useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 import Header from "./components/landing/Header";
-import { Hero, HowItWorks, Features, Testimonials, FAQ, FinalCTA, Footer } from "./components/landing/Sections";
+import { Hero, HowItWorks, Features, Testimonials, FinalCTA, Footer } from "./components/landing/Sections";
 import { Toaster } from "./components/ui/toaster";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = BACKEND_URL ? `${BACKEND_URL}/api` : "/api";
+// The app will now default to its own relative /api path
+const API = "/api";
 
 function App() {
   useEffect(() => {
     const helloWorldApi = async () => {
       try {
+        // This call will likely fail now unless you run the backend locally, which is expected.
         const response = await axios.get(`${API}/`);
         console.log(response.data.message);
       } catch (e) {
-        console.error(e, `errored out requesting / api`);
+        console.error(e, `errored out requesting /api`);
       }
     };
     helloWorldApi();
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-background text-foreground">
       <Header />
       <main>
         <Hero />
         <HowItWorks />
         <Features />
         <Testimonials />
-        <FAQ />
         <FinalCTA />
       </main>
       <Footer />
@@ -4224,95 +4764,113 @@ File: frontend/src/index.css
 @tailwind components;
 @tailwind utilities;
 
-/* Base font & smoothing */
-body {
-    margin: 0;
-    font-family: "Trebuchet MS", TrebuchetMS, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-        monospace;
-}
-
-/* Theme tokens */
 @layer base {
   :root {
-        --background: 0 0% 100%;
-        --foreground: 0 0% 3.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 0 0% 3.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 0 0% 3.9%;
-        --primary: 0 0% 9%;
-        --primary-foreground: 0 0% 98%;
-        --secondary: 0 0% 96.1%;
-        --secondary-foreground: 0 0% 9%;
-        --muted: 0 0% 96.1%;
-        --muted-foreground: 0 0% 45.1%;
-        --accent: 0 0% 96.1%;
-        --accent-foreground: 0 0% 9%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 89.8%;
-        --input: 0 0% 89.8%;
-        --ring: 0 0% 3.9%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
-    }
-  .dark {
-        --background: 0 0% 3.9%;
-        --foreground: 0 0% 98%;
-        --card: 0 0% 3.9%;
-        --card-foreground: 0 0% 98%;
-        --popover: 0 0% 3.9%;
-        --popover-foreground: 0 0% 98%;
-        --primary: 0 0% 98%;
-        --primary-foreground: 0 0% 9%;
-        --secondary: 0 0% 14.9%;
-        --secondary-foreground: 0 0% 98%;
-        --muted: 0 0% 14.9%;
-        --muted-foreground: 0 0% 63.9%;
-        --accent: 0 0% 14.9%;
-        --accent-foreground: 0 0% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 14.9%;
-        --input: 0 0% 14.9%;
-        --ring: 0 0% 83.1%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
-        --chart-5: 340 75% 55%;
-    }
+    --background: 240 10% 3.9%;
+    /* Dark background */
+    --foreground: 0 0% 98%;
+    /* Light text */
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 240 5.9% 10%; /* Eido charcoal for buttons */
+    --primary-foreground: 0 0% 98%;
+    /* Light text on buttons */
+
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%; /* Lighter border for dark mode */
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --radius: 0.5rem;
+  }
 }
 
 @layer base {
   * {
     @apply border-border;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
 }
 
-/* Global UX polish */
-html { scroll-behavior: smooth; }
-::selection { background: rgba(37, 99, 235, 0.18); }
+/* Add these new styles for the shimmer effect */
+@layer utilities {
+  .shimmer-button {
+    @apply relative overflow-hidden transition-colors duration-300;
+  }
 
-/* Buttons and interactive micro-animations */
-@layer components {
-  .hover-lift { transition: transform .25s ease, box-shadow .25s ease; }
-  .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.06); }
+  /* Define the spotlight pseudo-element */
+  .shimmer-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit; /* Match the button's border radius */
+
+    /* The radial gradient for the spotlight effect */
+    background: radial-gradient(
+      80px circle at var(--x) var(--y),
+      rgba(96, 165, 250, 0.25), /* Tailwind's blue-400 with 25% opacity */
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* Ensure it doesn't interfere with clicks */
+  }
+
+  /* Show the spotlight on hover */
+  .shimmer-button:hover::before {
+    opacity: 1;
+  }
+
+  /* --- FLIP ANIMATION STYLES --- */
+  .flip-container {
+    perspective: 1000px; /* Creates the 3D space */
+    cursor: pointer;
+  }
+
+  .flipper {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+  }
+
+  .flip-container:hover .flipper {
+    transform: rotateX(-180deg);
+  }
+
+  .front, .back {
+    display: block;
+    backface-visibility: hidden; /* Hides the back of the element when flipped */
+    position: relative;
+    padding: 2px 0;
+  }
+
+  .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotateX(180deg);
+  }
+  /* --- END FLIP ANIMATION STYLES --- */
 }
 
 ================
@@ -4329,12 +4887,6 @@ root.render(
     <App />
   </React.StrictMode>,
 );
-
-================
-File: frontend/.env
-================
-REACT_APP_BACKEND_URL=https://9d013f51-8068-4567-a08b-27ea7d6a7a82.preview.emergentagent.com
-WDS_SOCKET_PORT=443
 
 ================
 File: frontend/.gitignore
@@ -4492,14 +5044,14 @@ File: frontend/package.json
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "cra-template": "1.2.0",
-    "date-fns": "^4.1.0",
+    "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.507.0",
     "next-themes": "^0.4.6",
-    "react": "^19.0.0",
+    "react": "^18.2.0",
     "react-day-picker": "8.10.1",
-    "react-dom": "^19.0.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.56.2",
     "react-resizable-panels": "^3.0.1",
     "react-router-dom": "^7.5.1",
@@ -4512,6 +5064,7 @@ File: frontend/package.json
   },
   "scripts": {
     "start": "craco start",
+    "dev": "craco start",
     "build": "craco build",
     "test": "craco test"
   },
@@ -4629,95 +5182,98 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ================
 File: frontend/tailwind.config.js
 ================
+const { fontFamily } = require("tailwindcss/defaultTheme");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    darkMode: ["class"],
-    content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html"
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx}",
   ],
+  prefix: "",
   theme: {
-  	extend: {
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		},
-  		keyframes: {
-  			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
-  			},
-  			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
-  			}
-  		},
-  		animation: {
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
-  	}
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        roboto: ["Roboto", ...fontFamily.sans],
+      },
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "marquee-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        "marquee-right": {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "marquee-left": "marquee-left 60s linear infinite",
+        "marquee-right": "marquee-right 60s linear infinite",
+      },
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };
-
-================
-File: .gitconfig
-================
-[user]
-	email = github@emergent.sh
-	name = emergent-agent-e1
 
 ================
 File: .gitignore

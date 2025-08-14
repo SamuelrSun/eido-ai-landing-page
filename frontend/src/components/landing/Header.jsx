@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "../../components/ui/button";
-import { NavigationMenu } from "../../components/ui/navigation-menu"; // eslint-disable-line
+import ShimmerButton from "../ui/ShimmerButton";
+import { NavigationMenu } from "../ui/navigation-menu"; // eslint-disable-line
 
 const navItems = [
   { id: "how", label: "How it works" },
@@ -11,7 +11,6 @@ const navItems = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
@@ -24,34 +23,42 @@ export default function Header() {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[backdrop-filter,box-shadow,background-color] duration-300 ${
-        scrolled ? "backdrop-blur-xl bg-white/70 shadow-sm" : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-4 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 p-3 md:p-4 font-roboto">
+      <div
+        className={`relative mx-auto max-w-[1280px] flex items-center justify-between px-6 py-2 rounded-full border transition-all duration-300 ${
+          scrolled
+            ? "border-neutral-700/50 backdrop-blur-xl bg-gradient-to-b from-neutral-900/50 to-neutral-950/40 shadow-lg"
+            : "border-transparent bg-transparent"
+        }`}
+      >
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-md" />
-          <span className="text-[18px] font-semibold tracking-tight">Eido AI</span>
+          <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
+          <span className="text-[18px] font-semibold tracking-tight text-white">Eido AI</span>
         </div>
-        <nav className="hidden md:flex items-center gap-8 text-[14px]">
+        
+        <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
           {navItems.map((n) => (
-            <button
-              key={n.id}
-              onClick={() => scrollTo(n.id)}
-              className="text-neutral-700 hover:text-black transition-colors"
-            >
-              {n.label}
-            </button>
+            <div key={n.id} className="flip-container" onClick={() => scrollTo(n.id)}>
+              <button
+                className="flipper text-neutral-300 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest"
+              >
+                <span className="front">{n.label}</span>
+                <span className="back">{n.label}</span>
+              </button>
+            </div>
           ))}
         </nav>
+
         <div className="flex items-center gap-3">
-          <Button
+          <ShimmerButton
             onClick={() => scrollTo("cta")}
-            className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+            variant="outline"
+            className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100 rounded-full"
           >
-            Create your free account
-          </Button>
+            <span className="uppercase text-xs tracking-widest font-bold">
+              Create your free account
+            </span>
+          </ShimmerButton>
         </div>
       </div>
     </header>

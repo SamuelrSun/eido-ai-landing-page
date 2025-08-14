@@ -86,4 +86,58 @@ export const testimonials = [
     quote:
       "I love how specific the answers are—it's like chatting with my course, not the internet.",
   },
+  {
+    name: "David L.",
+    role: "Medical Student",
+    quote:
+      "Generating flashcards from my lecture PDFs is incredibly fast and effective for studying.",
+  },
+  {
+    name: "Chloe M.",
+    role: "Law Student",
+    quote:
+      "Being able to ask questions about specific case files and get cited answers is indispensable.",
+  },
+  {
+    name: "Ethan P.",
+    role: "Engineering Student",
+    quote:
+      "Eido helps me quickly find formulas and concepts from past assignments. It's my go-to study tool.",
+  },
+  {
+    name: "Olivia R.",
+    role: "History Major",
+    quote:
+      "The ability to consolidate all my readings and notes into one searchable place is amazing.",
+  },
+  {
+    name: "Ben S.",
+    role: "PhD Candidate",
+    quote:
+      "I use this for my literature reviews. Asking the Oracle complex questions saves me so much time.",
+  },
+  {
+    name: "Mia W.",
+    role: "Business Student",
+    quote:
+      "The Chrome extension is fantastic for quick questions while I'm doing research online.",
+  },
+   {
+    name: "Noah G.",
+    role: "Art History Student",
+    quote:
+      "It's brilliant for finding specific details about artworks across dozens of lecture slides.",
+  },
+  {
+    name: "Isabella H.",
+    role: "Psychology Student",
+    quote:
+      "Creating practice quizzes based on my actual course material has been key to my exam prep.",
+  },
+  {
+    name: "Liam F.",
+    role: "Physics Undergrad",
+    quote:
+      "Finally, I don't have to skim through 20 different PDFs to find one equation. A total lifesaver.",
+  },
 ];

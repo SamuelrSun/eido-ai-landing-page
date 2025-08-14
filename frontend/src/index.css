@@ -2,93 +2,152 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base font & smoothing */
-body {
-    margin: 0;
-    font-family: "Trebuchet MS", TrebuchetMS, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-        monospace;
-}
-
-/* Theme tokens */
 @layer base {
   :root {
-        --background: 0 0% 100%;
-        --foreground: 0 0% 3.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 0 0% 3.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 0 0% 3.9%;
-        --primary: 0 0% 9%;
-        --primary-foreground: 0 0% 98%;
-        --secondary: 0 0% 96.1%;
-        --secondary-foreground: 0 0% 9%;
-        --muted: 0 0% 96.1%;
-        --muted-foreground: 0 0% 45.1%;
-        --accent: 0 0% 96.1%;
-        --accent-foreground: 0 0% 9%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 89.8%;
-        --input: 0 0% 89.8%;
-        --ring: 0 0% 3.9%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
-    }
-  .dark {
-        --background: 0 0% 3.9%;
-        --foreground: 0 0% 98%;
-        --card: 0 0% 3.9%;
-        --card-foreground: 0 0% 98%;
-        --popover: 0 0% 3.9%;
-        --popover-foreground: 0 0% 98%;
-        --primary: 0 0% 98%;
-        --primary-foreground: 0 0% 9%;
-        --secondary: 0 0% 14.9%;
-        --secondary-foreground: 0 0% 98%;
-        --muted: 0 0% 14.9%;
-        --muted-foreground: 0 0% 63.9%;
-        --accent: 0 0% 14.9%;
-        --accent-foreground: 0 0% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 0 0% 14.9%;
-        --input: 0 0% 14.9%;
-        --ring: 0 0% 83.1%;
-        --chart-1: 220 70% 50%;
-        --chart-2: 160 60% 45%;
-        --chart-3: 30 80% 55%;
-        --chart-4: 280 65% 60%;
-        --chart-5: 340 75% 55%;
-    }
+    --background: 240 10% 3.9%;
+    /* Dark background */
+    --foreground: 0 0% 98%;
+    /* Light text */
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 240 5.9% 10%; /* Eido charcoal for buttons */
+    --primary-foreground: 0 0% 98%;
+    /* Light text on buttons */
+
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%; /* Lighter border for dark mode */
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --radius: 0.5rem;
+  }
 }
 
 @layer base {
   * {
     @apply border-border;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
+
+  /* --- GRAINY BACKGROUND EFFECT (REVISED) --- */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    /* Base64 encoded noise PNG, repeated over the screen */
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39sbGxVVVVPT09fadeInpaWmpqZNTU1MTExANDE6AAAAxUlEQVRIx+3UPQQAMAgEwSg2fP/29g5gTAnRbnk2P/ok3r9EM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iE911M9k2VLfG3AAAAAElFTkSuQmCC');
+    animation: grain 0.5s steps(1) infinite;
+  }
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-1%, -2%); }
+    20% { transform: translate(-3%, 1%); }
+    30% { transform: translate(1%, -3%); }
+    40% { transform: translate(-1%, 3%); }
+    50% { transform: translate(-3%, 2%); }
+    60% { transform: translate(3%, 0%); }
+    70% { transform: translate(0%, 3%); }
+    80% { transform: translate(1%, 4%); }
+    90% { transform: translate(-2%, 2%); }
+  }
+  /* --- END GRAINY BACKGROUND EFFECT --- */
 }
 
-/* Global UX polish */
-html { scroll-behavior: smooth; }
-::selection { background: rgba(37, 99, 235, 0.18); }
+/* Add these new styles for the shimmer effect */
+@layer utilities {
+  .shimmer-button {
+    @apply relative overflow-hidden transition-colors duration-300;
+  }
 
-/* Buttons and interactive micro-animations */
-@layer components {
-  .hover-lift { transition: transform .25s ease, box-shadow .25s ease; }
-  .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.06); }
+  /* Define the spotlight pseudo-element */
+  .shimmer-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit; /* Match the button's border radius */
+
+    /* The radial gradient for the spotlight effect */
+    background: radial-gradient(
+      80px circle at var(--x) var(--y),
+      rgba(96, 165, 250, 0.25), /* Tailwind's blue-400 with 25% opacity */
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* Ensure it doesn't interfere with clicks */
+  }
+
+  /* Show the spotlight on hover */
+  .shimmer-button:hover::before {
+    opacity: 1;
+  }
+  
+  /* Custom utility to hide scrollbars */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* --- FLIP ANIMATION STYLES --- */
+  .flip-container {
+    perspective: 1000px;
+    /* Creates the 3D space */
+    cursor: pointer;
+  }
+
+  .flipper {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+  }
+
+  .flip-container:hover .flipper {
+    transform: rotateX(-180deg);
+  }
+
+  .front,
+  .back {
+    display: block;
+    backface-visibility: hidden;
+    /* Hides the back of the element when flipped */
+    position: relative;
+    padding: 2px 0;
+  }
+
+  .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotateX(180deg);
+  }
+  /* --- END FLIP ANIMATION STYLES --- */
 }
