@@ -2,8 +2,16 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        
         <!-- This is the icon that will appear in the browser tab -->
-        <link rel="icon" href="%PUBLIC_URL%/eido-icon.png" />
+        <!-- It's good practice to have a .ico file for broader compatibility -->
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+        <!-- Adding different sizes for different devices -->
+        <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/eido-icon-16x16.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/eido-icon-32x32.png">
+        <!-- Apple touch icon for iOS devices -->
+        <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png">
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Eido AI - Your Personal Education Copilot" />
