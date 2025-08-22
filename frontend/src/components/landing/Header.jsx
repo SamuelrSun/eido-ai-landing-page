@@ -50,15 +50,16 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ShimmerButton
-            onClick={() => scrollTo("cta")}
-            variant="outline"
-            className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100 rounded-full"
-          >
-            <span className="uppercase text-xs tracking-widest font-bold">
-              Create your free account
-            </span>
-          </ShimmerButton>
+          <a href="https://dashboard.eido-ai.com" target="_blank" rel="noopener noreferrer">
+            <ShimmerButton
+              variant="outline"
+              className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100 rounded-full"
+            >
+              <span className="uppercase text-xs tracking-widest font-bold">
+                TAKE ME TO EIDO AI
+              </span>
+            </ShimmerButton>
+          </a>
         </div>
       </div>
     </header>

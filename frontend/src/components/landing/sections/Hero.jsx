@@ -117,12 +117,13 @@ export default function Hero() {
               directly from your course materials.
             </p>
             <div className="mt-8 flex items-center gap-3">
-              <ShimmerButton
-                onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
-                className="border border-blue-500 bg-blue-950/80 text-neutral-100 hover:border-blue-400"
-              >
-                Start for free
-              </ShimmerButton>
+              <a href="https://dashboard.eido-ai.com" target="_blank" rel="noopener noreferrer">
+                <ShimmerButton
+                  className="border border-blue-500 bg-blue-950/80 text-neutral-100 hover:border-blue-400"
+                >
+                  TAKE ME TO EIDO AI
+                </ShimmerButton>
+              </a>
               <ShimmerButton
                 variant="outline"
                 onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })}
