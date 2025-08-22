@@ -1,50 +1,45 @@
 This file is a merged representation of the entire codebase, combined into a single document by Repomix.
 
-================================================================
-File Summary
-================================================================
+<file_summary>
+This section contains a summary of this file.
 
-Purpose:
---------
+<purpose>
 This file contains a packed representation of the entire repository's contents.
 It is designed to be easily consumable by AI systems for analysis, code review,
 or other automated processes.
+</purpose>
 
-File Format:
-------------
+<file_format>
 The content is organized as follows:
 1. This summary section
 2. Repository information
 3. Directory structure
-4. Multiple file entries, each consisting of:
-  a. A separator line (================)
-  b. The file path (File: path/to/file)
-  c. Another separator line
-  d. The full contents of the file
-  e. A blank line
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
 
-Usage Guidelines:
------------------
+<usage_guidelines>
 - This file should be treated as read-only. Any changes should be made to the
   original repository files, not this packed version.
 - When processing this file, use the file path to distinguish
   between different files in the repository.
 - Be aware that this file may contain sensitive information. Handle it with
   the same level of security as you would the original repository.
+</usage_guidelines>
 
-Notes:
-------
+<notes>
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
 
-Additional Info:
-----------------
+</file_summary>
 
-================================================================
-Directory Structure
-================================================================
+<directory_structure>
 backend/
   .env
   requirements.txt
@@ -55,10 +50,18 @@ frontend/
   src/
     components/
       landing/
+        sections/
+          Features.jsx
+          FinalCTA.jsx
+          Footer.jsx
+          Hero.jsx
+          HowItWorks.jsx
+          SectionWrap.jsx
+          Testimonials.jsx
         FloatingShapes.jsx
         Header.jsx
-        Sections.jsx
         v1floatingshapes.jsx
+        v2floatingshapes.jsx
       ui/
         accordion.jsx
         alert-dialog.jsx
@@ -128,21 +131,18 @@ frontend/
 .gitignore
 README.md
 test_result.md
+</directory_structure>
 
-================================================================
-Files
-================================================================
+<files>
+This section contains the contents of the repository's files.
 
-================
-File: backend/.env
-================
+<file path="backend/.env">
 MONGO_URL="mongodb://localhost:27017"
 DB_NAME="test_database"
 CORS_ORIGINS="*"
+</file>
 
-================
-File: backend/requirements.txt
-================
+<file path="backend/requirements.txt">
 fastapi==0.110.1
 uvicorn==0.25.0
 boto3>=1.34.129
@@ -168,10 +168,9 @@ numpy>=1.26.0
 python-multipart>=0.0.9
 jq>=1.6.0
 typer>=0.9.0
+</file>
 
-================
-File: backend/server.py
-================
+<file path="backend/server.py">
 from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -247,109 +246,692 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+</file>
 
-================
-File: frontend/public/index.html
-================
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Eido AI - Your Personal Education Copilot" />
+<file path="frontend/src/components/landing/sections/Features.jsx">
+import React from "react";
+import { Card, CardContent } from "../../ui/card";
+import { Badge } from "../../ui/badge";
+import { features } from "../../../mock/mock";
+import {
+  MessageSquare,
+  Calendar as CalendarIcon,
+  Chrome,
+  ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import SectionWrap from "./SectionWrap";
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
-        
-        <!-- ADD THREE.JS LIBRARY -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-        
-        <title>Eido AI</title>
-    </head>
-    <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-        <script>
-            !(function (t, e) {
-                var o, n, p, r;
-                e.__SV ||
-                    ((window.posthog = e),
-                    (e._i = []),
-                    (e.init = function (i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
-                                (t[e] = function () {
-                                    t.push(
-                                        [e].concat(
-                                            Array.prototype.slice.call(
-                                                arguments,
-                                                0,
-                                            ),
-                                        ),
-                                    );
-                                });
-                        }
-                        ((p = t.createElement("script")).type =
-                            "text/javascript"),
-                            (p.crossOrigin = "anonymous"),
-                            (p.async = !0),
-                            (p.src =
-                                s.api_host.replace(
-                                    ".i.posthog.com",
-                                    "-assets.i.posthog.com",
-                                ) + "/static/array.js"),
-                            (r =
-                                t.getElementsByTagName(
-                                    "script",
-                                )[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (
-                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
-                                u.people = u.people || [],
-                                u.toString = function (t) {
-                                    var e = "posthog";
-                                    return (
-                                        "posthog" !== a && (e += "." + a),
-                                        t || (e += " (stub)"),
-                                        e
-                                    );
-                                },
-                                u.people.toString = function () {
-                                    return u.toString(1) + ".people (stub)";
-                                },
-                                o =
-                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
-                                        " ",
-                                    ),
-                                n = 0;
-                            n < o.length;
-                            n++
+export default function Features() {
+  const times = Array.from({ length: 10 }, (_, i) => `${i + 7 < 12 ? i + 7 : (i + 7) % 12 || 12} ${i + 7 < 12 ? 'AM' : 'PM'}`);
+  const days = ["Sun 10", "Mon 11", "Tue 12", "Wed 13", "Thu 14", "Fri 15", "Sat 16"];
+  return (
+    <div id="features" className="py-24 bg-gradient-to-b from-black to-neutral-900">
+      <SectionWrap>
+        {/* Oracle */}
+        <div className="grid md:grid-cols-2 gap-12 items-stretch">
+          <div>
+            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
+              {features.oracle.title}
+            </h3>
+            <p className="mt-4 text-neutral-400">{features.oracle.subtitle}</p>
+            <div className="mt-6 grid gap-4">
+              <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-950">
+                <div className="text-xs uppercase text-neutral-400">Generic AI</div>
+                <p className="mt-2 text-neutral-300">{features.oracle.genericExample}</p>
+              </div>
+              <div className="rounded-xl border border-blue-400/30 p-4 bg-gradient-to-b from-blue-950/50 to-neutral-950">
+                <div className="text-xs uppercase text-blue-400 font-semibold">Oracle (Cited)</div>
+                <p className="mt-2 text-neutral-200">{features.oracle.oracleExample}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {features.oracle.citations.map((c, i) => (
+                    <Badge key={i} variant="secondary" className="bg-white/10 border-none text-neutral-200">
+                      <ShieldCheck size={14} className="mr-1 text-blue-400" /> {c.label}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Card className="h-full border-neutral-800 bg-white/5 backdrop-blur-xl">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <MessageSquare size={18} className="text-blue-400" />
+                  <div className="text-sm font-semibold text-white">Oracle Knowledge Base</div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  {["Slides", "Notes", "Assignments", "Readings"].map((t) => (
+                    <div key={t} className="rounded-lg border border-neutral-800 p-3 bg-neutral-900 text-neutral-300">
+                      {t}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-24 grid md:grid-cols-2 gap-12 items-stretch">
+          <div className="h-full">
+            <div className="h-full flex flex-col border border-neutral-800 rounded-xl bg-neutral-950/50">
+              <div className="flex items-center justify-between p-4 border-b border-neutral-800">
+                <div className="flex items-center gap-4">
+                  <h4 className="font-semibold text-white text-sm">Aug 10 - Aug 16, 2025</h4>
+                  <div className="flex items-center gap-2 text-neutral-400">
+                    <button className="hover:text-white"><ChevronLeft size={16}/></button>
+                    <button className="hover:text-white"><ChevronRight size={16}/></button>
+                  </div>
+                  <button className="text-xs font-semibold border border-neutral-700 rounded-md px-3 py-1 hover:bg-neutral-800 text-neutral-200">Today</button>
+                </div>
+                <div className="flex items-center text-xs font-semibold border border-neutral-800 rounded-md">
+                   <button className="px-3 py-1 text-neutral-400 hover:bg-neutral-800 rounded-l-md">Day</button>
+                   <button className="px-3 py-1 text-white bg-neutral-800 border-x border-neutral-700">Week</button>
+                   <button className="px-3 py-1 text-neutral-400 hover:bg-neutral-800 rounded-r-md">Month</button>
+                </div>
+              </div>
+
+              <div className="flex-1 grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] text-xs text-neutral-400 relative">
+                <div className="row-start-2 pr-2 text-right">
+                  {times.map(t => <div key={t} className="h-9 -mt-2">{t}</div>)}
+                </div>
+                <div className="col-start-2 grid grid-cols-7">
+                   {days.map((d, i) => <div key={i} className={`p-2 text-center border-b border-l border-neutral-800 ${i === 0 ? 'border-l-0' : ''}`}>
+                    <span className="text-white">{d.split(' ')[0]}</span>
+                    <div className={`mt-1 h-7 w-7 flex items-center justify-center rounded-full mx-auto ${d.includes('12') ? 'bg-blue-600 text-white' : 'text-neutral-200'}`}>{d.split(' ')[1]}</div>
+                   </div>)}
+                </div>
+                <div className="col-start-2 row-start-2 grid grid-cols-7 grid-rows-10 border-t border-neutral-800">
+                  {Array.from({ length: 70 }).map((_, i) => <div key={i} className={`border-r border-b border-neutral-800 ${ (i + 1) % 7 === 0 ? 'border-r-0' : '' }`}></div>)}
+                  <div className="absolute inset-0 grid grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
+                    <div className="col-start-2 row-start-2 grid grid-cols-7 grid-rows-10">
+                        <div className="col-start-2 row-start-3 row-span-2 bg-blue-900/70 border border-blue-500 rounded-lg p-2 overflow-hidden">
+                        <p className="text-white font-semibold">Midterm Review</p>
+                        <p className="text-blue-200">Biology 101</p>
+                      </div>
+                       <div className="col-start-4 row-start-5 row-span-1 bg-green-900/70 border border-green-500 rounded-lg p-2">
+                        <p className="text-white font-semibold">Problem Set 3 Due</p>
+                       </div>
+                       <div className="col-start-6 row-start-7 row-span-2 bg-purple-900/70 border border-purple-500 rounded-lg p-2 overflow-hidden">
+                        <p className="text-white font-semibold">Project Meeting</p>
+                        <p className="text-purple-200">CS Capstone</p>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
+              {features.calendar.title}
+            </h3>
+            <p className="mt-4 text-neutral-400">{features.calendar.subtitle}</p>
+            <Card className="mt-6 border-neutral-800">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                   <CalendarIcon size={18} className="text-blue-400" />
+                  <div className="text-sm font-semibold text-white">Auto-Populated Calendar</div>
+                </div>
+                <div className="mt-4 grid gap-3">
+                  {features.calendar.sampleDates.map((d, i) => (
+                     <div key={i} className="flex items-center justify-between rounded-lg border border-neutral-800 p-3 bg-neutral-950">
+                      <span className="font-medium text-neutral-200">{d.label}</span>
+                      <span className="text-blue-400 font-semibold">{d.date}</span>
+                    </div>
+                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Extension */}
+        <div className="mt-24 grid md:grid-cols-2 gap-12 items-center">
+           <div>
+            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
+              {features.extension.title}
+            </h3>
+            <p className="mt-4 text-neutral-400">{features.extension.subtitle}</p>
+            <div className="mt-6 flex items-center gap-3 text-sm text-neutral-400">
+              <Chrome className="text-blue-400" size={18} /> Chrome Extension (placeholder)
+            </div>
+          </div>
+          <div>
+            <Card className="border-neutral-800 bg-white/5 backdrop-blur-xl">
+              <CardContent className="p-6">
+                <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-950">
+                  <div className="text-sm font-semibold text-white">Browser Toolbar</div>
+                  <div className="mt-3 h-10 rounded-md bg-neutral-900 border border-neutral-800 flex items-center px-3 gap-2">
+                    <img src="/eido-icon.png" alt="Eido AI Logo" className="h-6 w-6 rounded-md" />
+                    <span className="text-sm text-neutral-400">Oracle Quick Ask…</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </SectionWrap>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/landing/sections/FinalCTA.jsx">
+import React, { useState } from "react";
+import ShimmerButton from "../../ui/ShimmerButton";
+import { Input } from "../../ui/input";
+import { useToast } from "../../../hooks/use-toast";
+import SectionWrap from "./SectionWrap";
+
+export default function FinalCTA() {
+  const { toast } = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const entry = { name, email, ts: Date.now() };
+    const prev = JSON.parse(localStorage.getItem("eido_waitlist") || "[]");
+    localStorage.setItem("eido_waitlist", JSON.stringify([entry, ...prev]));
+    setName("");
+    setEmail("");
+    toast({ title: "You're on the list!", description: "We'll be in touch soon." });
+  };
+
+  return (
+    <div id="cta" className="py-24 bg-gradient-to-b from-black to-neutral-900">
+      <SectionWrap>
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-8 md:p-12 relative overflow-hidden">
+          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white">
+            Transform your education, for <span className="underline">free</span>
+          </h2>
+          <p className="mt-3 text-neutral-400 max-w-[52ch]">
+            Join thousands of students studying smarter, not harder.
+          </p>
+          <form onSubmit={onSubmit} className="mt-8 flex flex-col md:flex-row gap-3">
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className="h-12 bg-neutral-900 border-neutral-700 text-white"
+              required
+            />
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
+              className="h-12 bg-neutral-900 border-neutral-700 text-white"
+              required
+            />
+            <ShimmerButton 
+              type="submit" 
+              className="h-12 bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/10"
+            >
+              Sign Up
+            </ShimmerButton>
+          </form>
+           <div className="mt-3 text-xs text-neutral-500">We’ll never share your email.</div>
+        </div>
+      </SectionWrap>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/landing/sections/Footer.jsx">
+import React from "react";
+import SectionWrap from "./SectionWrap";
+
+export default function Footer() {
+  return (
+    <footer id="contact" className="py-16 bg-gradient-to-b from-neutral-900 to-black">
+      <SectionWrap>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
+            <div>
+              <div className="font-semibold text-white">Eido AI</div>
+              <div className="text-xs text-neutral-400">Your personal education copilot</div>
+            </div>
+          </div>
+          <div className="text-sm text-neutral-400">© 2025 Eido AI. All rights reserved.</div>
+        </div>
+      </SectionWrap>
+    </footer>
+  );
+}
+</file>
+
+<file path="frontend/src/components/landing/sections/Hero.jsx">
+import React, { useEffect, useState } from "react";
+import ShimmerButton from "../../ui/ShimmerButton";
+import { Card, CardContent } from "../../ui/card";
+import { Badge } from "../../ui/badge";
+import { features } from "../../../mock/mock";
+import FloatingShapes from "../FloatingShapes";
+import { ShieldCheck } from "lucide-react";
+import SectionWrap from "./SectionWrap";
+
+// Helper component specifically for this section
+const OracleMessage = ({ children }) => {
+  const handleMouseMove = (e) => {
+    const { currentTarget: target } = e;
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    target.style.setProperty("--x", `${x}px`);
+    target.style.setProperty("--y", `${y}px`);
+  };
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      className="shimmer-button self-start max-w-[85%] rounded-2xl border border-blue-400/30 bg-blue-950/40 p-4 text-sm text-neutral-200 shadow-sm"
+    >
+      {children}
+    </div>
+  );
+};
+
+const UserMessage = ({ children }) => (
+  <div className="self-end max-w-[85%] rounded-2xl border border-neutral-700 bg-neutral-800 p-4 text-sm text-neutral-200 shadow-sm">
+    {children}
+  </div>
+);
+
+const chatMessages = [
+  {
+    type: "user",
+    content: `"Explain the difference between aerobic and anaerobic respiration."`,
+  },
+  {
+    type: "oracle",
+    content: (
+      <>
+        {features.oracle.oracleExample}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {features.oracle.citations.map((c, i) => (
+            <span key={i} className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
+              <ShieldCheck size={14} /> {c.label}
+              <span className="opacity-60">{c.meta}</span>
+            </span>
+          ))}
+        </div>
+      </>
+    ),
+  },
+  {
+    type: "user",
+    content: `"Can you give me a study guide for the upcoming midterm?"`,
+  },
+  {
+    type: "oracle",
+    content: (
+      <>
+        Of course. I've generated a study guide focusing on key concepts from Lecture 01-05 and your uploaded readings. I've prioritized topics you've previously asked about.
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
+            <ShieldCheck size={14} /> Midterm_Study_Guide.pdf
+          </span>
+        </div>
+      </>
+    ),
+  },
+  {
+    type: "user",
+    content: `"What are the main points from last week's reading on photosynthesis?"`,
+  },
+  {
+    type: "oracle",
+    content: (
+      <>
+        The reading &quot;Photosynthesis Unveiled&quot; (Ch. 4) emphasizes two main stages: the light-dependent reactions that produce ATP and NADPH, and the Calvin cycle, which uses that energy to synthesize glucose.
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
+            <ShieldCheck size={14} /> Photosynthesis...
+            <span className="opacity-60">Ch. 4, p. 12</span>
+          </span>
+        </div>
+      </>
+    ),
+  },
+];
+
+export default function Hero() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return (
+    <div className="relative pt-28 md:pt-32 bg-primary text-primary-foreground h-[750px] md:h-[650px] overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <FloatingShapes />
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full border border-neutral-700" />
+        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_60%)]" />
+      </div>
+
+      <SectionWrap className="relative z-10">
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          <div className={`transition-all duration-700 ${mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>
+            <h1 className="text-4xl md:text-6xl leading-[1.05] tracking-tight font-light text-white">
+              The comprehensive AI copilot for education
+            </h1>
+            <p className="mt-5 text-neutral-300 text-lg max-w-[44ch]">
+              Stop searching the entire web for answers. Get instant, accurate, and citable responses
+              directly from your course materials.
+            </p>
+            <div className="mt-8 flex items-center gap-3">
+              <ShimmerButton
+                onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
+                className="border border-blue-500 bg-blue-950/80 text-neutral-100 hover:border-blue-400"
+              >
+                Start for free
+              </ShimmerButton>
+              <ShimmerButton
+                variant="outline"
+                onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })}
+                className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100"
+              >
+                Learn more
+              </ShimmerButton>
+            </div>
+            <div className="mt-6 flex items-center gap-3">
+              <Badge className="bg-white/10 text-white border-none">Private by default</Badge>
+              <Badge variant="secondary" className="bg-white/10 text-white border-none">Citations included</Badge>
+              <Badge variant="secondary" className="bg-white/10 text-white border-none">Chrome extension</Badge>
+            </div>
+          </div>
+          <div>
+            <div className="max-h-[430px] overflow-hidden rounded-xl">
+              <Card className={`border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-700 ${
+                mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              }`}>
+                <CardContent className="p-6">
+                  <div className="h-[380px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)] group">
+                    <div className="flex flex-col space-y-4 animate-marquee-up group-hover:[animation-play-state:paused] [&_>_*]:shrink-0">
+                      {[...chatMessages, ...chatMessages].map((msg, i) =>
+                        msg.type === "user" ? (
+                          <UserMessage key={i}>{msg.content}</UserMessage>
+                        ) : (
+                          <OracleMessage key={i}>{msg.content}</OracleMessage>
                         )
-                            g(u, o[n]);
-                        e._i.push([i, s, a]);
-                    }),
-                    (e.__SV = 1));
-            })(document, window.posthog || []);
-            posthog.init("phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE", {
-                api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
-            });
-        </script>
-    </body>
-</html>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </SectionWrap>
+    </div>
+  );
+}
+</file>
 
-================
-File: frontend/src/components/landing/FloatingShapes.jsx
-================
+<file path="frontend/src/components/landing/sections/HowItWorks.jsx">
+import React from "react";
+import { Card, CardContent } from "../../ui/card";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Paperclip } from "lucide-react";
+
+// Helper component for Oracle/Answer messages
+const AnswerBubble = ({ htmlContent }) => {
+  const handleMouseMove = (e) => {
+    const { currentTarget: target } = e;
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    target.style.setProperty("--x", `${x}px`);
+    target.style.setProperty("--y", `${y}px`);
+  };
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      className="shimmer-button self-start max-w-[90%] w-auto rounded-2xl border border-blue-400/30 bg-blue-950/40 p-4 text-sm text-neutral-200 shadow-sm"
+      dangerouslySetInnerHTML={{ __html: htmlContent }}
+    />
+  );
+};
+
+// Helper component for User/Question messages
+const UserMessage = ({ text }) => (
+  <div className="w-full flex justify-end">
+    <p className="p-3 rounded-lg bg-neutral-800 border border-neutral-700 max-w-[80%]">
+      {text}
+    </p>
+  </div>
+);
+
+// Component for the decorative background shapes
+const ShapeDecorations = () => (
+  <>
+    {/* Tilted Square */}
+    <svg
+      viewBox="0 0 100 100"
+      className="absolute w-[28rem] h-[28rem] text-black -left-40 top-10 transform -rotate-[30deg] z-0"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="10" y="10" width="80" height="80" stroke="currentColor" strokeWidth="8" />
+    </svg>
+    {/* Circle */}
+    <svg
+      viewBox="0 0 100 100"
+      className="absolute w-[32rem] h-[32rem] text-black -top-32 -right-40 z-0"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" />
+    </svg>
+    {/* Triangle */}
+    <svg
+      viewBox="0 0 100 100"
+      className="absolute w-[26rem] h-[26rem] text-black -bottom-32 right-16 z-0"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M50 10 L90 80 L10 80 Z" stroke="currentColor" strokeWidth="8" />
+    </svg>
+  </>
+);
+
+
+// Hard-coded data
+const chatContent = [
+    {
+        type: "answer",
+        html: `<strong>Direct Attacks on Domain Controllers:</strong> These can disrupt critical authentication and authorization services network-wide.`,
+    },
+    {
+        type: "answer",
+        html: `<strong>Upstream Infrastructure Attacks:</strong> Targeting related services like DNS can indirectly impact AD operations <span class="text-blue-400 font-medium">[Source 1]</span>, <span class="text-blue-400 font-medium">[Source 2]</span>.`,
+    },
+    {
+        type: "question",
+        text: "What are the different types of cloud delivery models?",
+    },
+    {
+        type: "answer",
+        html: `Key cloud models include:<br><br>
+    1. <strong>IaaS (Infrastructure-as-a-Service):</strong> Provides raw infrastructure (servers, storage). You manage the OS and applications. Examples: AWS, Azure, Google Cloud <span class="text-blue-400 font-medium">[Source 3]</span>.<br><br>
+    2. <strong>PaaS (Platform-as-a-Service):</strong> Offers a platform for development. The provider manages the infrastructure, while you provide the code. Examples: Azure, AWS, Google Cloud <span class="text-blue-400 font-medium">[Source 4]</span>.`,
+    },
+];
+
+const sourcesData = [
+  {
+    id: 1,
+    title: "L06_Active Directory.pdf (Page 4)",
+    content:
+      "Reduce attack surface: - Patch, patch, patch! - Deploy robust AV/antimalware software specific to AD protection, and configure it properly - Don’t run anything else on your domain controllers - Separate out domain administrator and other privileged access accounts AD Attack",
+  },
+  {
+    id: 2,
+    title: "itp457 - lesson 06 - Active Directory and GPOs - v2 20251.pdf (Page 21)",
+    content: "Common Attack Vectors • Attacks against administrative hosts and accounts",
+  },
+];
+
+export default function HowItWorks() {
+  return (
+    <div id="how" className="bg-gradient-to-b from-primary to-black pt-12 pb-24">
+      <div className="mx-auto max-w-[1600px] px-12">
+        <div className="grid grid-cols-5 gap-6">
+          {/* Left Panel: Main container with new background shapes */}
+          <div className="col-span-3 h-[500px] relative rounded-2xl border border-neutral-800 bg-neutral-900 overflow-hidden">
+            <ShapeDecorations />
+            
+            {/* Inner, inset panel for the chatbot UI */}
+            <div className="absolute top-12 bottom-12 left-16 right-16 z-10">
+              <Card className="h-full w-full border border-white/10 bg-white/5 backdrop-blur-xl text-neutral-200 flex flex-col">
+                <CardContent className="p-6 flex-grow overflow-y-auto no-scrollbar space-y-6 text-sm leading-relaxed">
+                  {chatContent.map((item, index) =>
+                    item.type === "question" ? (
+                      <UserMessage key={index} text={item.text} />
+                    ) : (
+                      <AnswerBubble key={index} htmlContent={item.html} />
+                    )
+                  )}
+                </CardContent>
+                <div className="p-4 border-t border-white/10 flex items-center gap-3">
+                  <Button variant="ghost" size="icon" className="text-neutral-400 hover:bg-white/10">
+                    <Paperclip className="h-5 w-5" />
+                  </Button>
+                  <Input
+                    placeholder="Ask about your documents, or attach a file..."
+                    className="bg-neutral-900/50 border-neutral-600 text-base h-11"
+                  />
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                    Send
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Right Panel: Sources UI */}
+          <div className="col-span-2 h-[500px] flex flex-col gap-4">
+            <Card className="flex-grow border border-white/10 bg-white/5 backdrop-blur-xl text-neutral-300 flex flex-col">
+              <div className="p-3 border-b border-white/10">
+                <h3 className="font-semibold text-base text-neutral-200">Sources</h3>
+              </div>
+              <CardContent className="p-3 pt-3 space-y-3 text-xs overflow-y-auto no-scrollbar">
+                {sourcesData.map((source) => (
+                  <div key={source.id} className="p-3 border border-neutral-700 rounded-lg bg-neutral-900/50">
+                    <p className="font-semibold text-neutral-200">
+                      Source {source.id}: {source.title}
+                    </p>
+                    <p className="mt-1 text-neutral-400">{source.content}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-2 gap-4">
+                 <Card className="bg-neutral-900/50 border-neutral-700 text-neutral-300 p-3 text-xs">
+                    <p className="font-semibold">L06_Active Directory.pdf</p>
+                    <ul className="list-disc list-inside mt-2 space-y-1 text-neutral-400">
+                        <li>AD Attack/Defense - Part 2</li>
+                        <li>Over-permissioning of attack paths</li>
+                        <li>Common Attack Vectors</li>
+                    </ul>
+                 </Card>
+                 <Card className="bg-neutral-900/50 border-neutral-700 text-neutral-300 p-3 text-xs">
+                    <p className="font-semibold">itp457 - lesson 06 - Active Dire...</p>
+                    <ul className="list-disc list-inside mt-2 space-y-1 text-neutral-400">
+                        <li>Common Attack Vectors</li>
+                        <li>Attacks against administrative...</li>
+                        <li>Attacks against regular users</li>
+                    </ul>
+                 </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/landing/sections/SectionWrap.jsx">
+import React from "react";
+
+export default function SectionWrap({ id, children, className = "" }) {
+    return (
+        <section id={id} className={`mx-auto max-w-[1280px] px-6 md:px-10 ${className}`}>
+            {children}
+        </section>
+    );
+}
+</file>
+
+<file path="frontend/src/components/landing/sections/Testimonials.jsx">
+import React from "react";
+import { Card, CardContent } from "../../ui/card";
+import { testimonials } from "../../../mock/mock";
+import { Quote } from "lucide-react";
+
+// Helper component specifically for this section
+const TestimonialCard = ({ t }) => {
+  const handleMouseMove = (e) => {
+    const { currentTarget: target } = e;
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    target.style.setProperty("--x", `${x}px`);
+    target.style.setProperty("--y", `${y}px`);
+  };
+
+  return (
+    <Card
+      onMouseMove={handleMouseMove}
+      className="shimmer-button w-[350px] shrink-0 border-neutral-800 bg-neutral-900 transition-colors hover:border-blue-400/30 hover:bg-blue-950/40"
+    >
+      <CardContent className="p-6">
+        <Quote className="text-blue-400" size={20} />
+        <p className="mt-4 text-neutral-300 h-20">{t.quote}</p>
+        <div className="mt-6 text-sm font-semibold text-white">{t.name}</div>
+        <div className="text-xs text-neutral-500">{t.role}</div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default function Testimonials() {
+  const firstRow = testimonials.slice(0, 6);
+  const secondRow = testimonials.slice(6, 12);
+  return (
+    <section id="testimonials" className="py-24 space-y-6 bg-gradient-to-b from-neutral-900 to-black">
+      <div className="overflow-hidden group">
+        <div className="w-max flex gap-6 animate-marquee-right group-hover:[animation-play-state:paused]">
+          {[...firstRow, ...firstRow].map((t, i) => <TestimonialCard t={t} key={`a-${i}`} />)}
+        </div>
+      </div>
+      <div className="overflow-hidden group">
+        <div className="w-max flex gap-6 animate-marquee-left group-hover:[animation-play-state:paused]">
+          {[...secondRow, ...secondRow].map((t, i) => <TestimonialCard t={t} key={`c-${i}`} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+</file>
+
+<file path="frontend/src/components/landing/FloatingShapes.jsx">
 import React, { useRef, useEffect } from 'react';
 
 const FloatingShapes = () => {
   const canvasRef = useRef(null);
-  const mousePosRef = useRef({ x: 0, y: 0 });
-
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -358,15 +940,7 @@ const FloatingShapes = () => {
     let animationFrameId;
     let shapes = [];
 
-    // --- MOUSE TRACKING ---
-    const handleMouseMove = (event) => {
-      const rect = canvas.getBoundingClientRect();
-      mousePosRef.current = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      };
-    };
-    window.addEventListener('mousemove', handleMouseMove);
+    // --- MOUSE TRACKING REMOVED ---
 
     // --- SHAPE INITIALIZATION & RESIZE LOGIC ---
     const handleResize = () => {
@@ -375,7 +949,6 @@ const FloatingShapes = () => {
 
       canvas.width = parent.offsetWidth;
       canvas.height = parent.offsetHeight;
-      mousePosRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
 
       const shapeSize = 220;
       const numShapes = 10;
@@ -384,7 +957,6 @@ const FloatingShapes = () => {
       const newShapes = [];
       const minDistance = shapeSize;
       const maxAttempts = 100;
-
       for (let i = 0; i < numShapes; i++) {
         let newShape;
         let positionFound = false;
@@ -393,12 +965,10 @@ const FloatingShapes = () => {
           const potentialX = shapeSize / 2 + Math.random() * (canvas.width - shapeSize);
           const potentialY = shapeSize / 2 + Math.random() * (canvas.height - shapeSize);
           let isOverlapping = false;
-
           for (const existingShape of newShapes) {
             const dx = existingShape.x - potentialX;
             const dy = existingShape.y - potentialY;
             const distance = Math.sqrt(dx * dx + dy * dy);
-
             if (distance < minDistance) {
               isOverlapping = true;
               break;
@@ -416,6 +986,10 @@ const FloatingShapes = () => {
               vx: (Math.random() - 0.5) * 0.6,
               vy: (Math.random() - 0.5) * 0.6,
               mass: 1,
+              // New properties for randomized shimmer
+              intensity: Math.random() * 0.4,
+              maxIntensity: 0.3 + Math.random() * 0.4,
+              vIntensity: (Math.random() - 0.5) * 0.005,
             };
             positionFound = true;
             break;
@@ -433,13 +1007,16 @@ const FloatingShapes = () => {
             vx: (Math.random() - 0.5) * 0.6,
             vy: (Math.random() - 0.5) * 0.6,
             mass: 1,
+            // New properties for randomized shimmer
+            intensity: Math.random() * 0.4,
+            maxIntensity: 0.3 + Math.random() * 0.4,
+            vIntensity: (Math.random() - 0.5) * 0.005,
           };
         }
         newShapes.push(newShape);
       }
       shapes = newShapes;
     };
-
     const resizeObserver = new ResizeObserver(handleResize);
     if (canvas.parentElement) {
       resizeObserver.observe(canvas.parentElement);
@@ -450,8 +1027,6 @@ const FloatingShapes = () => {
     const update = () => {
       if (canvas.width > 0 && shapes.length > 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const lightSource = mousePosRef.current;
 
         shapes.forEach((shape, i) => {
           // Update shape position and rotation
@@ -508,19 +1083,22 @@ const FloatingShapes = () => {
           ctx.translate(shape.x, shape.y);
           ctx.rotate(shape.rotation);
 
-          // Dynamic lighting
-          const lightVector = { x: lightSource.x - shape.x, y: lightSource.y - shape.y };
-          const lightDistance = Math.sqrt(lightVector.x * lightVector.x + lightVector.y * lightVector.y);
-          const lightNormal = { x: lightVector.x / lightDistance, y: lightVector.y / lightDistance };
-          const lightRadius = 500; 
-          const intensity = Math.max(0, 1 - lightDistance / lightRadius);
+          // Update and oscillate shape's individual intensity for the shimmer effect
+          shape.intensity += shape.vIntensity;
+          if (shape.intensity > shape.maxIntensity || shape.intensity <= 0) {
+            shape.vIntensity *= -1;
+          }
+          const intensity = Math.max(0, shape.intensity);
+
+          // The "light" direction is now based on the shape's own rotation
+          const lightNormal = { x: Math.cos(shape.rotation), y: Math.sin(shape.rotation) };
 
           // Shadow effect
-          ctx.shadowColor = `rgba(0, 0, 0, ${0.5 * intensity})`;
-          ctx.shadowBlur = 30 * intensity;
-          ctx.shadowOffsetX = -lightNormal.x * 15 * intensity;
-          ctx.shadowOffsetY = -lightNormal.y * 15 * intensity;
-
+          ctx.shadowColor = `rgba(0, 0, 0, ${0.4 * intensity})`;
+          ctx.shadowBlur = 25 * intensity;
+          ctx.shadowOffsetX = -lightNormal.x * 10 * intensity;
+          ctx.shadowOffsetY = -lightNormal.y * 10 * intensity;
+          
           // --- 🎨 FINAL: Layered Border Drawing Logic ---
           const size = shape.size / 2;
           const outerBorderWidth = 26;
@@ -548,12 +1126,11 @@ const FloatingShapes = () => {
 
           // Set composite operation to paint on top of the existing stroke.
           ctx.globalCompositeOperation = 'source-atop';
-
+          
           // Layer 2: Paint the darker, outer shine over the entire base.
-          // This gradient is now opaque, fading from medium to dark grey.
           const outerGradient = ctx.createLinearGradient(-size * lightNormal.x, -size * lightNormal.y, size * lightNormal.x, size * lightNormal.y);
-          outerGradient.addColorStop(0, `rgba(120, 120, 120, ${intensity})`);
-          outerGradient.addColorStop(1, `rgba(40, 40, 40, ${intensity})`);
+          outerGradient.addColorStop(0, `rgba(120, 120, 120, ${0.7 * intensity})`);
+          outerGradient.addColorStop(1, `rgba(40, 40, 40, ${0.7 * intensity})`);
           
           ctx.strokeStyle = outerGradient;
           ctx.lineWidth = outerBorderWidth;
@@ -561,10 +1138,9 @@ const FloatingShapes = () => {
           ctx.stroke();
 
           // Layer 3: Paint the brighter, inner shine on top of the outer shine.
-          // This gradient is also opaque, fading from white to light grey.
           const innerGradient = ctx.createLinearGradient(-size * lightNormal.x, -size * lightNormal.y, size * lightNormal.x, size * lightNormal.y);
-          innerGradient.addColorStop(0, `rgba(255, 255, 255, ${0.8 * intensity})`);
-          innerGradient.addColorStop(1, `rgba(180, 180, 180, ${0.8 * intensity})`);
+          innerGradient.addColorStop(0, `rgba(255, 255, 255, ${0.5 * intensity})`);
+          innerGradient.addColorStop(1, `rgba(180, 180, 180, ${0.5 * intensity})`);
 
           ctx.strokeStyle = innerGradient;
           ctx.lineWidth = innerBorderWidth;
@@ -579,14 +1155,13 @@ const FloatingShapes = () => {
     };
 
     update();
-
+    
     // --- CLEANUP ---
     return () => {
       if (canvas.parentElement) {
         resizeObserver.unobserve(canvas.parentElement);
       }
       window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
@@ -594,507 +1169,9 @@ const FloatingShapes = () => {
 };
 
 export default FloatingShapes;
+</file>
 
-================
-File: frontend/src/components/landing/Header.jsx
-================
-import React, { useEffect, useState } from "react";
-import ShimmerButton from "../../components/ui/ShimmerButton";
-import { NavigationMenu } from "../../components/ui/navigation-menu"; // eslint-disable-line
-
-const navItems = [
-  { id: "how", label: "How it works" },
-  { id: "features", label: "Features" },
-  { id: "testimonials", label: "Testimonials" },
-  { id: "contact", label: "Contact" },
-];
-export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 p-3 md:p-4 font-roboto">
-      <div
-        className={`mx-auto max-w-[1280px] flex items-center justify-between px-6 py-2 rounded-full border transition-all duration-300 ${
-          scrolled
-            ? "border-neutral-700/50 backdrop-blur-xl bg-gradient-to-b from-neutral-900/50 to-neutral-950/40 shadow-lg"
-            : "border-transparent bg-transparent"
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
-          <span className="text-[18px] font-semibold tracking-tight text-white">Eido AI</span>
-        </div>
-        <nav className="hidden md:flex items-center gap-8">
-          {/* --- NAVIGATION ITEMS UPDATED FOR FLIP ANIMATION --- */}
-          {navItems.map((n) => (
-            <div key={n.id} className="flip-container" onClick={() => scrollTo(n.id)}>
-              <button
-                className="flipper text-neutral-300 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest"
-              >
-                <span className="front">{n.label}</span>
-                <span className="back">{n.label}</span>
-              </button>
-            </div>
-          ))}
-          {/* --- END NAVIGATION ITEMS UPDATE --- */}
-        </nav>
-        <div className="flex items-center gap-3">
-          <ShimmerButton
-            onClick={() => scrollTo("cta")}
-            variant="outline"
-            className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100 rounded-full"
-          >
-            <span className="uppercase text-xs tracking-widest font-bold">
-              Create your free account
-            </span>
-          </ShimmerButton>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-================
-File: frontend/src/components/landing/Sections.jsx
-================
-import React, { useEffect, useState } from "react";
-import { Button } from "../../components/ui/button";
-import ShimmerButton from "../../components/ui/ShimmerButton";
-import { Card, CardContent } from "../../components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
-import { Input } from "../../components/ui/input";
-import { Badge } from "../../components/ui/badge";
-import { useToast } from "../../hooks/use-toast";
-import { howSteps, features, testimonials } from "../../mock/mock";
-import FloatingShapes from "./FloatingShapes";
-import {
-  FileUp,
-  MessageSquare,
-  GraduationCap,
-  Calendar as CalendarIcon,
-  Chrome,
-  Quote,
-  ShieldCheck,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-
-const iconMap = { FileUp, MessageSquare, GraduationCap };
-
-const SectionWrap = ({ id, children, className = "" }) => (
-  <section id={id} className={`mx-auto max-w-[1280px] px-6 md:px-10 ${className}`}>
-    {children}
-  </section>
-);
-
-export function Hero() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  return (
-    // Restore the bg-primary class here to bring back the base background color
-    <div className="relative pt-28 md:pt-32 bg-primary text-primary-foreground h-[750px] md:h-[650px] overflow-hidden">
-      {/* --- FIX START --- */}
-      {/* This wrapper holds the floating shapes and sits behind the main content but in front of the decorative circles */}
-      <div className="absolute inset-0 z-0">
-          <FloatingShapes />
-      </div>
-      {/* --- FIX END --- */}
-
-      {/* The other decorative elements, now with a lower z-index to be behind the shapes */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full border border-neutral-700" />
-        <div className="absolute left-1/2 -translate-x-1/2 -top-24 h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_60%)]" />
-      </div>
-
-      <SectionWrap className="relative z-10">
-        <div className="grid md:grid-cols-2 gap-10 items-start">
-          <div className={`transition-all duration-700 ${mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>
-            <h1 className="text-4xl md:text-6xl leading-[1.05] tracking-tight font-light text-white">
-              Your personal education copilot
-            </h1>
-            <p className="mt-5 text-neutral-300 text-lg max-w-[44ch]">
-              Stop searching the entire web for answers. Get instant, accurate, and citable responses
-              directly from your course materials.
-            </p>
-            <div className="mt-8 flex items-center gap-3">
-              <ShimmerButton
-                onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
-                className="bg-white text-black shadow-lg shadow-white/10 hover:bg-neutral-200"
-              >
-                Create your free account
-              </ShimmerButton>
-              <ShimmerButton
-                variant="outline"
-                onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })}
-                className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100"
-              >
-                See how it works
-              </ShimmerButton>
-            </div>
-            <div className="mt-6 flex items-center gap-3">
-              <Badge className="bg-white/10 text-white border-none">Private by default</Badge>
-              <Badge variant="secondary" className="bg-white/10 text-white border-none">Citations included</Badge>
-              <Badge variant="secondary" className="bg-white/10 text-white border-none">Chrome extension</Badge>
-            </div>
-          </div>
-          <div>
-            {/* Clipping container for the card */}
-            <div className="max-h-[430px] overflow-hidden rounded-t-xl">
-              <Card className={`border border-white/10 bg-white/5 backdrop-blur-xl transition-all duration-700 ${
-                mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-              }`}>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3">
-                    <img src="/eido-icon.png" alt="Eido AI Logo" className="h-9 w-9 rounded-md" />
-                    <div>
-                      <div className="text-sm font-semibold text-white">Oracle Chat</div>
-                      <div className="text-xs text-neutral-400">Eido AI</div>
-                    </div>
-                  </div>
-                  <div className="mt-5 space-y-4 flex flex-col">
-                    <div className="rounded-2xl bg-neutral-800 border border-neutral-700 p-4 text-sm shadow-sm text-neutral-200 self-end max-w-[85%]">
-                      "Explain the difference between aerobic and anaerobic respiration."
-                    </div>
-                    <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm self-start max-w-[85%]">
-                      {features.oracle.oracleExample}
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {features.oracle.citations.map((c, i) => (
-                          <span
-                            key={i}
-                            className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]"
-                          >
-                            <ShieldCheck size={14} /> {c.label}
-                            <span className="opacity-60">{c.meta}</span>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="rounded-2xl bg-neutral-800 border border-neutral-700 p-4 text-sm shadow-sm text-neutral-200 self-end max-w-[85%]">
-                      "Can you give me a study guide for the upcoming midterm?"
-                    </div>
-                    <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm self-start max-w-[85%]">
-                      Of course. I've generated a study guide focusing on key concepts from Lecture 01-05 and your uploaded readings. I've prioritized topics you've asked about before.
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
-                          <ShieldCheck size={14} /> Midterm_Study_Guide.pdf
-                        </span>
-                      </div>
-                    </div>
-                    <div className="rounded-2xl bg-neutral-800 border border-neutral-700 p-4 text-sm shadow-sm text-neutral-200 self-end max-w-[85%]">
-                      "What are the main points from last week's reading on photosynthesis?"
-                    </div>
-                    <div className="rounded-2xl bg-blue-600 text-white p-4 text-sm shadow-sm self-start max-w-[85%]">
-                      The reading "Photosynthesis Unveiled" (Ch. 4) emphasizes two main stages: the light-dependent reactions that produce ATP and NADPH, and the Calvin cycle, which uses that energy to synthesize glucose.
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[11px]">
-                          <ShieldCheck size={14} /> Photosynthesis...
-                          <span className="opacity-60">Ch. 4, p. 12</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </SectionWrap>
-    </div>
-  );
-}
-
-export function HowItWorks() {
-  return (
-    <div id="how" className="bg-gradient-to-b from-primary to-black py-24">
-      <div className="mx-auto max-w-[1600px] px-12">
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-2 h-[500px] bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl">
-            {/* Placeholder for 66% width image */}
-          </div>
-          <div className="col-span-1 h-[500px] bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl">
-            {/* Placeholder for 33% width image */}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function Features() {
-  const times = Array.from({ length: 10 }, (_, i) => `${i + 7 < 12 ? i + 7 : (i + 7) % 12 || 12} ${i + 7 < 12 ? 'AM' : 'PM'}`);
-  const days = ["Sun 10", "Mon 11", "Tue 12", "Wed 13", "Thu 14", "Fri 15", "Sat 16"];
-
-  return (
-    <div id="features" className="py-24 bg-gradient-to-b from-black to-neutral-900">
-      <SectionWrap>
-        {/* Oracle */}
-        <div className="grid md:grid-cols-2 gap-12 items-stretch">
-          <div>
-            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
-              {features.oracle.title}
-            </h3>
-            <p className="mt-4 text-neutral-400">{features.oracle.subtitle}</p>
-            <div className="mt-6 grid gap-4">
-              <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-950">
-                <div className="text-xs uppercase text-neutral-400">Generic AI</div>
-                <p className="mt-2 text-neutral-300">{features.oracle.genericExample}</p>
-              </div>
-              <div className="rounded-xl border border-blue-400/30 p-4 bg-gradient-to-b from-blue-950/50 to-neutral-950">
-                <div className="text-xs uppercase text-blue-400 font-semibold">Oracle (Cited)</div>
-                <p className="mt-2 text-neutral-200">{features.oracle.oracleExample}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {features.oracle.citations.map((c, i) => (
-                    <Badge key={i} variant="secondary" className="bg-white/10 border-none text-neutral-200">
-                      <ShieldCheck size={14} className="mr-1 text-blue-400" /> {c.label}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <Card className="h-full border-neutral-800 bg-white/5 backdrop-blur-xl">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <MessageSquare size={18} className="text-blue-400" />
-                  <div className="text-sm font-semibold text-white">Oracle Knowledge Base</div>
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  {["Slides", "Notes", "Assignments", "Readings"].map((t) => (
-                    <div key={t} className="rounded-lg border border-neutral-800 p-3 bg-neutral-900 text-neutral-300">
-                      {t}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Calendar */}
-        <div className="mt-24 grid md:grid-cols-2 gap-12 items-stretch">
-          <div className="h-full">
-            <div className="h-full flex flex-col border border-neutral-800 rounded-xl bg-neutral-950/50">
-              {/* Calendar Header */}
-              <div className="flex items-center justify-between p-4 border-b border-neutral-800">
-                <div className="flex items-center gap-4">
-                  <h4 className="font-semibold text-white text-sm">Aug 10 - Aug 16, 2025</h4>
-                  <div className="flex items-center gap-2 text-neutral-400">
-                    <button className="hover:text-white"><ChevronLeft size={16}/></button>
-                    <button className="hover:text-white"><ChevronRight size={16}/></button>
-                  </div>
-                  <button className="text-xs font-semibold border border-neutral-700 rounded-md px-3 py-1 hover:bg-neutral-800 text-neutral-200">Today</button>
-                </div>
-                <div className="flex items-center text-xs font-semibold border border-neutral-800 rounded-md">
-                   <button className="px-3 py-1 text-neutral-400 hover:bg-neutral-800 rounded-l-md">Day</button>
-                   <button className="px-3 py-1 text-white bg-neutral-800 border-x border-neutral-700">Week</button>
-                   <button className="px-3 py-1 text-neutral-400 hover:bg-neutral-800 rounded-r-md">Month</button>
-                </div>
-              </div>
-
-              {/* Calendar Grid */}
-              <div className="flex-1 grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] text-xs text-neutral-400 relative">
-                <div className="row-start-2 pr-2 text-right">
-                  {times.map(t => <div key={t} className="h-9 -mt-2">{t}</div>)}
-                </div>
-                <div className="col-start-2 grid grid-cols-7">
-                   {days.map((d, i) => <div key={i} className={`p-2 text-center border-b border-l border-neutral-800 ${i === 0 ? 'border-l-0' : ''}`}>
-                    <span className="text-white">{d.split(' ')[0]}</span>
-                    <div className={`mt-1 h-7 w-7 flex items-center justify-center rounded-full mx-auto ${d.includes('12') ? 'bg-blue-600 text-white' : 'text-neutral-200'}`}>{d.split(' ')[1]}</div>
-                   </div>)}
-                </div>
-                <div className="col-start-2 row-start-2 grid grid-cols-7 grid-rows-10 border-t border-neutral-800">
-                  {/* Grid Lines */}
-                  {Array.from({ length: 70 }).map((_, i) => <div key={i} className={`border-r border-b border-neutral-800 ${ (i + 1) % 7 === 0 ? 'border-r-0' : '' }`}></div>)}
-                  {/* Events */}
-                  <div className="absolute inset-0 grid grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-                    <div className="col-start-2 row-start-2 grid grid-cols-7 grid-rows-10">
-                       <div className="col-start-2 row-start-3 row-span-2 bg-blue-900/70 border border-blue-500 rounded-lg p-2 overflow-hidden">
-                        <p className="text-white font-semibold">Midterm Review</p>
-                        <p className="text-blue-200">Biology 101</p>
-                       </div>
-                       <div className="col-start-4 row-start-5 row-span-1 bg-green-900/70 border border-green-500 rounded-lg p-2">
-                        <p className="text-white font-semibold">Problem Set 3 Due</p>
-                       </div>
-                       <div className="col-start-6 row-start-7 row-span-2 bg-purple-900/70 border border-purple-500 rounded-lg p-2 overflow-hidden">
-                        <p className="text-white font-semibold">Project Meeting</p>
-                        <p className="text-purple-200">CS Capstone</p>
-                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
-              {features.calendar.title}
-            </h3>
-            <p className="mt-4 text-neutral-400">{features.calendar.subtitle}</p>
-            <Card className="mt-6 border-neutral-800">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <CalendarIcon size={18} className="text-blue-400" />
-                  <div className="text-sm font-semibold text-white">Auto-Populated Calendar</div>
-                </div>
-                <div className="mt-4 grid gap-3">
-                  {features.calendar.sampleDates.map((d, i) => (
-                    <div key={i} className="flex items-center justify-between rounded-lg border border-neutral-800 p-3 bg-neutral-950">
-                      <span className="font-medium text-neutral-200">{d.label}</span>
-                      <span className="text-blue-400 font-semibold">{d.date}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Extension */}
-        <div className="mt-24 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h3 className="text-2xl md:text-4xl font-light tracking-tight text-white">
-              {features.extension.title}
-            </h3>
-            <p className="mt-4 text-neutral-400">{features.extension.subtitle}</p>
-            <div className="mt-6 flex items-center gap-3 text-sm text-neutral-400">
-              <Chrome className="text-blue-400" size={18} /> Chrome Extension (placeholder)
-            </div>
-          </div>
-          <div>
-            <Card className="border-neutral-800 bg-white/5 backdrop-blur-xl">
-              <CardContent className="p-6">
-                <div className="rounded-xl border border-neutral-800 p-4 bg-neutral-950">
-                  <div className="text-sm font-semibold text-white">Browser Toolbar</div>
-                  <div className="mt-3 h-10 rounded-md bg-neutral-900 border border-neutral-800 flex items-center px-3 gap-2">
-                    <img src="/eido-icon.png" alt="Eido AI Logo" className="h-6 w-6 rounded-md" />
-                    <span className="text-sm text-neutral-400">Oracle Quick Ask…</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </SectionWrap>
-    </div>
-  );
-}
-
-const TestimonialCard = ({ t }) => (
-  <Card className="w-[350px] shrink-0 border-neutral-800 bg-neutral-900 hover:bg-neutral-800/50">
-    <CardContent className="p-6">
-      <Quote className="text-blue-400" size={20} />
-      <p className="mt-4 text-neutral-300 h-20">{t.quote}</p>
-      <div className="mt-6 text-sm font-semibold text-white">{t.name}</div>
-      <div className="text-xs text-neutral-500">{t.role}</div>
-    </CardContent>
-  </Card>
-);
-
-export function Testimonials() {
-  const firstRow = testimonials.slice(0, 6);
-  const secondRow = testimonials.slice(6, 12);
-
-  return (
-    <section id="testimonials" className="py-24 space-y-6 bg-gradient-to-b from-neutral-900 to-black">
-      <div className="overflow-hidden">
-        <div className="w-max flex gap-6 animate-marquee-right">
-          {[...firstRow, ...firstRow].map((t, i) => <TestimonialCard t={t} key={`a-${i}`} />)}
-        </div>
-      </div>
-      <div className="overflow-hidden">
-        <div className="w-max flex gap-6 animate-marquee-left">
-          {[...secondRow, ...secondRow].map((t, i) => <TestimonialCard t={t} key={`c-${i}`} />)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
-export function FinalCTA() {
-  const { toast } = useToast();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const entry = { name, email, ts: Date.now() };
-    const prev = JSON.parse(localStorage.getItem("eido_waitlist") || "[]");
-    localStorage.setItem("eido_waitlist", JSON.stringify([entry, ...prev]));
-    setName("");
-    setEmail("");
-    toast({ title: "You're on the list!", description: "We'll be in touch soon." });
-  };
-
-  return (
-    <div id="cta" className="py-24 bg-gradient-to-b from-black to-neutral-900">
-      <SectionWrap>
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-8 md:p-12 relative overflow-hidden">
-          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white">Elevate your education today</h2>
-          <p className="mt-3 text-neutral-400 max-w-[52ch]">
-            Join thousands of students studying smarter, not harder.
-          </p>
-          <form onSubmit={onSubmit} className="mt-8 flex flex-col md:flex-row gap-3">
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              className="h-12 bg-neutral-900 border-neutral-700 text-white"
-              required
-            />
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
-              className="h-12 bg-neutral-900 border-neutral-700 text-white"
-              required
-            />
-            <ShimmerButton type="submit" className="h-12 bg-white hover:bg-neutral-200 text-black shadow-lg shadow-white/10">
-              Sign up for free
-            </ShimmerButton>
-          </form>
-          <div className="mt-3 text-xs text-neutral-500">We’ll never share your email.</div>
-        </div>
-      </SectionWrap>
-    </div>
-  );
-}
-
-export function Footer() {
-  return (
-    <footer id="contact" className="py-16 bg-gradient-to-b from-neutral-900 to-black">
-      <SectionWrap>
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
-            <div>
-              <div className="font-semibold text-white">Eido AI</div>
-              <div className="text-xs text-neutral-400">Your personal education copilot</div>
-            </div>
-          </div>
-          <div className="text-sm text-neutral-400">© 2025 Eido AI. All rights reserved.</div>
-        </div>
-      </SectionWrap>
-    </footer>
-  );
-}
-
-================
-File: frontend/src/components/landing/v1floatingshapes.jsx
-================
+<file path="frontend/src/components/landing/v1floatingshapes.jsx">
 import React, { useRef, useEffect } from 'react';
 
 const FloatingShapes = () => {
@@ -1273,10 +1350,249 @@ const FloatingShapes = () => {
 };
 
 export default FloatingShapes;
+</file>
 
-================
-File: frontend/src/components/ui/accordion.jsx
-================
+<file path="frontend/src/components/landing/v2floatingshapes.jsx">
+import React, { useRef, useEffect } from 'react';
+const FloatingShapes = () => {
+  const canvasRef = useRef(null);
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let shapes = [];
+
+    // --- MOUSE TRACKING ---
+    const handleMouseMove = (event) => {
+      const rect = canvas.getBoundingClientRect();
+      mousePosRef.current = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+
+    // --- SHAPE INITIALIZATION & RESIZE LOGIC ---
+    const handleResize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+
+      canvas.width = parent.offsetWidth;
+      canvas.height = parent.offsetHeight;
+      mousePosRef.current = { x: canvas.width / 2, y: canvas.height / 2 };
+
+      const shapeSize = 220;
+      const numShapes = 10;
+      const shapeTypes = ['square', 'triangle', 'circle'];
+      
+      const newShapes = [];
+      const minDistance = shapeSize;
+      const maxAttempts = 100;
+      for (let i = 0; i < numShapes; i++) {
+        let newShape;
+        let positionFound = false;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          const potentialX = shapeSize / 2 + Math.random() * (canvas.width - shapeSize);
+          const potentialY = shapeSize / 2 + Math.random() * (canvas.height - shapeSize);
+          let isOverlapping = false;
+          for (const existingShape of newShapes) {
+            const dx = existingShape.x - potentialX;
+            const dy = existingShape.y - potentialY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < minDistance) {
+              isOverlapping = true;
+              break;
+            }
+          }
+
+          if (!isOverlapping) {
+            newShape = {
+              type: shapeTypes[i % shapeTypes.length],
+              size: shapeSize,
+              rotation: Math.random() * Math.PI * 2,
+              vRotation: (Math.random() - 0.5) * 0.002,
+              x: potentialX,
+              y: potentialY,
+              vx: (Math.random() - 0.5) * 0.6,
+              vy: (Math.random() - 0.5) * 0.6,
+              mass: 1,
+            };
+            positionFound = true;
+            break;
+          }
+        }
+
+        if (!positionFound) {
+          newShape = {
+            type: shapeTypes[i % shapeTypes.length],
+            size: shapeSize,
+            rotation: Math.random() * Math.PI * 2,
+            vRotation: (Math.random() - 0.5) * 0.002,
+            x: shapeSize / 2 + Math.random() * (canvas.width - shapeSize),
+            y: shapeSize / 2 + Math.random() * (canvas.height - shapeSize),
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: (Math.random() - 0.5) * 0.6,
+            mass: 1,
+          };
+        }
+        newShapes.push(newShape);
+      }
+      shapes = newShapes;
+    };
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    }
+    handleResize();
+    // --- ANIMATION LOOP ---
+    const update = () => {
+      if (canvas.width > 0 && shapes.length > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const lightSource = mousePosRef.current;
+
+        shapes.forEach((shape, i) => {
+          // Update shape position and rotation
+          shape.x += shape.vx;
+          shape.y += shape.vy;
+          shape.rotation += shape.vRotation;
+
+          // Wall collision
+          const radius = shape.size / 2;
+          if (shape.x + radius > canvas.width || shape.x - radius < 0) {
+            shape.vx *= -1;
+          }
+          if (shape.y + radius > canvas.height || shape.y - radius < 0) {
+            shape.vy *= -1;
+          }
+
+          // Shape-to-shape collision
+          for (let j = i + 1; j < shapes.length; j++) {
+              const otherShape = shapes[j];
+              const dx = otherShape.x - shape.x;
+              const dy = otherShape.y - shape.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              const minDistance = (shape.size / 2) + (otherShape.size / 2);
+
+              if (distance < minDistance) {
+                  const angle = Math.atan2(dy, dx);
+                  const sin = Math.sin(angle);
+                  const cos = Math.cos(angle);
+                  const pos0 = { x: 0, y: 0 };
+                  const pos1 = { x: (otherShape.x - shape.x) * cos + (otherShape.y - shape.y) * sin, y: (otherShape.y - shape.y) * cos - (otherShape.x - shape.x) * sin };
+                  const vel0 = { x: shape.vx * cos + shape.vy * sin, y: shape.vy * cos - shape.vx * sin };
+                  const vel1 = { x: otherShape.vx * cos + otherShape.vy * sin, y: otherShape.vy * cos - otherShape.vx * sin };
+                  const vxTotal = vel0.x - vel1.x;
+                  vel0.x = ((shape.mass - otherShape.mass) * vel0.x + 2 * otherShape.mass * vel1.x) / (shape.mass + otherShape.mass);
+                  vel1.x = vxTotal + vel0.x;
+                  const absV = Math.abs(vel0.x) + Math.abs(vel1.x);
+                  const overlap = minDistance - Math.abs(pos0.x - pos1.x);
+                  pos0.x += vel0.x / absV * overlap;
+                  pos1.x += vel1.x / absV * overlap;
+                  const pos0F = { x: pos0.x * cos - pos0.y * sin, y: pos0.y * cos + pos0.x * sin };
+                  const pos1F = { x: pos1.x * cos - pos1.y * sin, y: pos1.y * cos + pos1.x * sin };
+                  otherShape.x = shape.x + pos1F.x;
+                  otherShape.y = shape.y + pos1F.y;
+                  shape.x = shape.x + pos0F.x;
+                  shape.y = shape.y + pos0F.y;
+                  shape.vx = vel0.x * cos - vel0.y * sin;
+                  shape.vy = vel0.y * cos + vel0.x * sin;
+                  otherShape.vx = vel1.x * cos - vel1.y * sin;
+                  otherShape.vy = vel1.y * cos + vel1.x * sin;
+              }
+          }
+
+          ctx.save();
+          ctx.translate(shape.x, shape.y);
+          ctx.rotate(shape.rotation);
+
+          // Dynamic lighting
+          const lightVector = { x: lightSource.x - shape.x, y: lightSource.y - shape.y };
+          const lightDistance = Math.sqrt(lightVector.x * lightVector.x + lightVector.y * lightVector.y);
+          const lightNormal = { x: lightVector.x / lightDistance, y: lightVector.y / lightDistance };
+          const lightRadius = 500;
+          const intensity = Math.max(0, 1 - lightDistance / lightRadius);
+
+          // Shadow effect
+          ctx.shadowColor = `rgba(0, 0, 0, ${0.4 * intensity})`;
+          ctx.shadowBlur = 25 * intensity;
+          ctx.shadowOffsetX = -lightNormal.x * 10 * intensity;
+          ctx.shadowOffsetY = -lightNormal.y * 10 * intensity;
+          // --- 🎨 FINAL: Layered Border Drawing Logic ---
+          const size = shape.size / 2;
+          const outerBorderWidth = 26;
+          const innerBorderWidth = 22;
+          
+          const createShapePath = () => {
+            ctx.beginPath();
+            if (shape.type === 'square') {
+              ctx.rect(-size, -size, shape.size, shape.size);
+            } else if (shape.type === 'circle') {
+              ctx.arc(0, 0, size, 0, Math.PI * 2);
+            } else if (shape.type === 'triangle') {
+              ctx.moveTo(0, -size);
+              ctx.lineTo(size, size);
+              ctx.lineTo(-size, size);
+              ctx.closePath();
+            }
+          };
+          // Layer 1: Draw a solid black base for the entire border.
+          ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+          ctx.lineWidth = outerBorderWidth;
+          createShapePath();
+          ctx.stroke();
+
+          // Set composite operation to paint on top of the existing stroke.
+          ctx.globalCompositeOperation = 'source-atop';
+          // Layer 2: Paint the darker, outer shine over the entire base.
+          // This gradient is now opaque, fading from medium to dark grey.
+          const outerGradient = ctx.createLinearGradient(-size * lightNormal.x, -size * lightNormal.y, size * lightNormal.x, size * lightNormal.y);
+          outerGradient.addColorStop(0, `rgba(120, 120, 120, ${0.7 * intensity})`);
+          outerGradient.addColorStop(1, `rgba(40, 40, 40, ${0.7 * intensity})`);
+          
+          ctx.strokeStyle = outerGradient;
+          ctx.lineWidth = outerBorderWidth;
+          createShapePath();
+          ctx.stroke();
+          // Layer 3: Paint the brighter, inner shine on top of the outer shine.
+          // This gradient is also opaque, fading from white to light grey.
+          const innerGradient = ctx.createLinearGradient(-size * lightNormal.x, -size * lightNormal.y, size * lightNormal.x, size * lightNormal.y);
+          innerGradient.addColorStop(0, `rgba(255, 255, 255, ${0.5 * intensity})`);
+          innerGradient.addColorStop(1, `rgba(180, 180, 180, ${0.5 * intensity})`);
+
+          ctx.strokeStyle = innerGradient;
+          ctx.lineWidth = innerBorderWidth;
+          createShapePath();
+          ctx.stroke();
+          
+          ctx.restore();
+        });
+      }
+
+      animationFrameId = window.requestAnimationFrame(update);
+    };
+
+    update();
+    // --- CLEANUP ---
+    return () => {
+      if (canvas.parentElement) {
+        resizeObserver.unobserve(canvas.parentElement);
+      }
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+};
+
+export default FloatingShapes;
+</file>
+
+<file path="frontend/src/components/ui/accordion.jsx">
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
@@ -1318,10 +1634,9 @@ const AccordionContent = React.forwardRef(({ className, children, ...props }, re
 AccordionContent.displayName = AccordionPrimitive.Content.displayName
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+</file>
 
-================
-File: frontend/src/components/ui/alert-dialog.jsx
-================
+<file path="frontend/src/components/ui/alert-dialog.jsx">
 import * as React from "react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 
@@ -1419,10 +1734,9 @@ export {
   AlertDialogAction,
   AlertDialogCancel,
 }
+</file>
 
-================
-File: frontend/src/components/ui/alert.jsx
-================
+<file path="frontend/src/components/ui/alert.jsx">
 import * as React from "react"
 import { cva } from "class-variance-authority";
 
@@ -1470,19 +1784,17 @@ const AlertDescription = React.forwardRef(({ className, ...props }, ref) => (
 AlertDescription.displayName = "AlertDescription"
 
 export { Alert, AlertTitle, AlertDescription }
+</file>
 
-================
-File: frontend/src/components/ui/aspect-ratio.jsx
-================
+<file path="frontend/src/components/ui/aspect-ratio.jsx">
 import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
 
 const AspectRatio = AspectRatioPrimitive.Root
 
 export { AspectRatio }
+</file>
 
-================
-File: frontend/src/components/ui/avatar.jsx
-================
+<file path="frontend/src/components/ui/avatar.jsx">
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
@@ -1516,10 +1828,9 @@ const AvatarFallback = React.forwardRef(({ className, ...props }, ref) => (
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
 export { Avatar, AvatarImage, AvatarFallback }
+</file>
 
-================
-File: frontend/src/components/ui/badge.jsx
-================
+<file path="frontend/src/components/ui/badge.jsx">
 import * as React from "react"
 import { cva } from "class-variance-authority";
 
@@ -1554,10 +1865,9 @@ function Badge({
 }
 
 export { Badge, badgeVariants }
+</file>
 
-================
-File: frontend/src/components/ui/breadcrumb.jsx
-================
+<file path="frontend/src/components/ui/breadcrumb.jsx">
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
@@ -1650,10 +1960,9 @@ export {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 }
+</file>
 
-================
-File: frontend/src/components/ui/button.jsx
-================
+<file path="frontend/src/components/ui/button.jsx">
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority";
@@ -1702,10 +2011,9 @@ const Button = React.forwardRef(({ className, variant, size, asChild = false, ..
 Button.displayName = "Button"
 
 export { Button, buttonVariants }
+</file>
 
-================
-File: frontend/src/components/ui/calendar.jsx
-================
+<file path="frontend/src/components/ui/calendar.jsx">
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
@@ -1777,10 +2085,9 @@ function Calendar({
 Calendar.displayName = "Calendar"
 
 export { Calendar }
+</file>
 
-================
-File: frontend/src/components/ui/card.jsx
-================
+<file path="frontend/src/components/ui/card.jsx">
 import * as React from "react"
 
 import { cn } from "../../lib/utils"
@@ -1831,10 +2138,9 @@ const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
 CardFooter.displayName = "CardFooter"
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+</file>
 
-================
-File: frontend/src/components/ui/carousel.jsx
-================
+<file path="frontend/src/components/ui/carousel.jsx">
 import * as React from "react"
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react"
@@ -2028,10 +2334,9 @@ const CarouselNext = React.forwardRef(({ className, variant = "outline", size = 
 CarouselNext.displayName = "CarouselNext"
 
 export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext };
+</file>
 
-================
-File: frontend/src/components/ui/checkbox.jsx
-================
+<file path="frontend/src/components/ui/checkbox.jsx">
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
@@ -2054,10 +2359,9 @@ const Checkbox = React.forwardRef(({ className, ...props }, ref) => (
 Checkbox.displayName = CheckboxPrimitive.Root.displayName
 
 export { Checkbox }
+</file>
 
-================
-File: frontend/src/components/ui/collapsible.jsx
-================
+<file path="frontend/src/components/ui/collapsible.jsx">
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
 
 const Collapsible = CollapsiblePrimitive.Root
@@ -2067,10 +2371,9 @@ const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
 const CollapsibleContent = CollapsiblePrimitive.CollapsibleContent
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent }
+</file>
 
-================
-File: frontend/src/components/ui/command.jsx
-================
+<file path="frontend/src/components/ui/command.jsx">
 import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
 import { Search } from "lucide-react"
@@ -2187,10 +2490,9 @@ export {
   CommandShortcut,
   CommandSeparator,
 }
+</file>
 
-================
-File: frontend/src/components/ui/context-menu.jsx
-================
+<file path="frontend/src/components/ui/context-menu.jsx">
 import * as React from "react"
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
@@ -2347,10 +2649,9 @@ export {
   ContextMenuSubTrigger,
   ContextMenuRadioGroup,
 }
+</file>
 
-================
-File: frontend/src/components/ui/dialog.jsx
-================
+<file path="frontend/src/components/ui/dialog.jsx">
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
@@ -2445,10 +2746,9 @@ export {
   DialogTitle,
   DialogDescription,
 }
+</file>
 
-================
-File: frontend/src/components/ui/drawer.jsx
-================
+<file path="frontend/src/components/ui/drawer.jsx">
 import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
@@ -2539,10 +2839,9 @@ export {
   DrawerTitle,
   DrawerDescription,
 }
+</file>
 
-================
-File: frontend/src/components/ui/dropdown-menu.jsx
-================
+<file path="frontend/src/components/ui/dropdown-menu.jsx">
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronRight, Circle } from "lucide-react"
@@ -2699,10 +2998,9 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
 }
+</file>
 
-================
-File: frontend/src/components/ui/form.jsx
-================
+<file path="frontend/src/components/ui/form.jsx">
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
@@ -2836,10 +3134,9 @@ export {
   FormMessage,
   FormField,
 }
+</file>
 
-================
-File: frontend/src/components/ui/hover-card.jsx
-================
+<file path="frontend/src/components/ui/hover-card.jsx">
 import * as React from "react"
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 
@@ -2863,10 +3160,9 @@ const HoverCardContent = React.forwardRef(({ className, align = "center", sideOf
 HoverCardContent.displayName = HoverCardPrimitive.Content.displayName
 
 export { HoverCard, HoverCardTrigger, HoverCardContent }
+</file>
 
-================
-File: frontend/src/components/ui/input-otp.jsx
-================
+<file path="frontend/src/components/ui/input-otp.jsx">
 import * as React from "react"
 import { OTPInput, OTPInputContext } from "input-otp"
 import { Minus } from "lucide-react"
@@ -2920,10 +3216,9 @@ const InputOTPSeparator = React.forwardRef(({ ...props }, ref) => (
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
+</file>
 
-================
-File: frontend/src/components/ui/input.jsx
-================
+<file path="frontend/src/components/ui/input.jsx">
 import * as React from "react"
 
 import { cn } from "../../lib/utils"
@@ -2943,10 +3238,9 @@ const Input = React.forwardRef(({ className, type, ...props }, ref) => {
 Input.displayName = "Input"
 
 export { Input }
+</file>
 
-================
-File: frontend/src/components/ui/label.jsx
-================
+<file path="frontend/src/components/ui/label.jsx">
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { cva } from "class-variance-authority";
@@ -2963,10 +3257,9 @@ const Label = React.forwardRef(({ className, ...props }, ref) => (
 Label.displayName = LabelPrimitive.Root.displayName
 
 export { Label }
+</file>
 
-================
-File: frontend/src/components/ui/menubar.jsx
-================
+<file path="frontend/src/components/ui/menubar.jsx">
 import * as React from "react"
 import * as MenubarPrimitive from "@radix-ui/react-menubar"
 import { Check, ChevronRight, Circle } from "lucide-react"
@@ -3165,10 +3458,9 @@ export {
   MenubarSub,
   MenubarShortcut,
 }
+</file>
 
-================
-File: frontend/src/components/ui/navigation-menu.jsx
-================
+<file path="frontend/src/components/ui/navigation-menu.jsx">
 import * as React from "react"
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
 import { cva } from "class-variance-authority"
@@ -3273,10 +3565,9 @@ export {
   NavigationMenuIndicator,
   NavigationMenuViewport,
 }
+</file>
 
-================
-File: frontend/src/components/ui/pagination.jsx
-================
+<file path="frontend/src/components/ui/pagination.jsx">
 import * as React from "react"
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
@@ -3377,10 +3668,9 @@ export {
   PaginationNext,
   PaginationEllipsis,
 }
+</file>
 
-================
-File: frontend/src/components/ui/popover.jsx
-================
+<file path="frontend/src/components/ui/popover.jsx">
 import * as React from "react"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 
@@ -3408,10 +3698,9 @@ const PopoverContent = React.forwardRef(({ className, align = "center", sideOffs
 PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor }
+</file>
 
-================
-File: frontend/src/components/ui/progress.jsx
-================
+<file path="frontend/src/components/ui/progress.jsx">
 import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
 
@@ -3433,10 +3722,9 @@ const Progress = React.forwardRef(({ className, value, ...props }, ref) => (
 Progress.displayName = ProgressPrimitive.Root.displayName
 
 export { Progress }
+</file>
 
-================
-File: frontend/src/components/ui/radio-group.jsx
-================
+<file path="frontend/src/components/ui/radio-group.jsx">
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { Circle } from "lucide-react"
@@ -3466,10 +3754,9 @@ const RadioGroupItem = React.forwardRef(({ className, ...props }, ref) => {
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
 export { RadioGroup, RadioGroupItem }
+</file>
 
-================
-File: frontend/src/components/ui/resizable.jsx
-================
+<file path="frontend/src/components/ui/resizable.jsx">
 import { GripVertical } from "lucide-react"
 import * as ResizablePrimitive from "react-resizable-panels"
 
@@ -3510,10 +3797,9 @@ const ResizableHandle = ({
 )
 
 export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
+</file>
 
-================
-File: frontend/src/components/ui/scroll-area.jsx
-================
+<file path="frontend/src/components/ui/scroll-area.jsx">
 import * as React from "react"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
 
@@ -3552,10 +3838,9 @@ const ScrollBar = React.forwardRef(({ className, orientation = "vertical", ...pr
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
 
 export { ScrollArea, ScrollBar }
+</file>
 
-================
-File: frontend/src/components/ui/select.jsx
-================
+<file path="frontend/src/components/ui/select.jsx">
 import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
@@ -3675,10 +3960,9 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 }
+</file>
 
-================
-File: frontend/src/components/ui/separator.jsx
-================
+<file path="frontend/src/components/ui/separator.jsx">
 import * as React from "react"
 import * as SeparatorPrimitive from "@radix-ui/react-separator"
 
@@ -3702,10 +3986,9 @@ const Separator = React.forwardRef((
 Separator.displayName = SeparatorPrimitive.Root.displayName
 
 export { Separator }
+</file>
 
-================
-File: frontend/src/components/ui/sheet.jsx
-================
+<file path="frontend/src/components/ui/sheet.jsx">
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva } from "class-variance-authority";
@@ -3814,10 +4097,9 @@ export {
   SheetTitle,
   SheetDescription,
 }
+</file>
 
-================
-File: frontend/src/components/ui/ShimmerButton.jsx
-================
+<file path="frontend/src/components/ui/ShimmerButton.jsx">
 import React from "react";
 import { Button } from "./button";
 import { cn } from "../../lib/utils";
@@ -3852,10 +4134,9 @@ const ShimmerButton = React.forwardRef(
 ShimmerButton.displayName = "ShimmerButton";
 
 export default ShimmerButton;
+</file>
 
-================
-File: frontend/src/components/ui/skeleton.jsx
-================
+<file path="frontend/src/components/ui/skeleton.jsx">
 import { cn } from "../../lib/utils"
 
 function Skeleton({
@@ -3870,10 +4151,9 @@ function Skeleton({
 }
 
 export { Skeleton }
+</file>
 
-================
-File: frontend/src/components/ui/slider.jsx
-================
+<file path="frontend/src/components/ui/slider.jsx">
 import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 
@@ -3895,10 +4175,9 @@ const Slider = React.forwardRef(({ className, ...props }, ref) => (
 Slider.displayName = SliderPrimitive.Root.displayName
 
 export { Slider }
+</file>
 
-================
-File: frontend/src/components/ui/sonner.jsx
-================
+<file path="frontend/src/components/ui/sonner.jsx">
 import { useTheme } from "next-themes"
 import { Toaster as Sonner } from "sonner"
 
@@ -3927,10 +4206,9 @@ const Toaster = ({
 }
 
 export { Toaster }
+</file>
 
-================
-File: frontend/src/components/ui/switch.jsx
-================
+<file path="frontend/src/components/ui/switch.jsx">
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
 
@@ -3953,10 +4231,9 @@ const Switch = React.forwardRef(({ className, ...props }, ref) => (
 Switch.displayName = SwitchPrimitives.Root.displayName
 
 export { Switch }
+</file>
 
-================
-File: frontend/src/components/ui/table.jsx
-================
+<file path="frontend/src/components/ui/table.jsx">
 import * as React from "react"
 
 import { cn } from "../../lib/utils"
@@ -4043,10 +4320,9 @@ export {
   TableCell,
   TableCaption,
 }
+</file>
 
-================
-File: frontend/src/components/ui/tabs.jsx
-================
+<file path="frontend/src/components/ui/tabs.jsx">
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
@@ -4088,10 +4364,9 @@ const TabsContent = React.forwardRef(({ className, ...props }, ref) => (
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }
+</file>
 
-================
-File: frontend/src/components/ui/textarea.jsx
-================
+<file path="frontend/src/components/ui/textarea.jsx">
 import * as React from "react"
 
 import { cn } from "../../lib/utils"
@@ -4110,10 +4385,9 @@ const Textarea = React.forwardRef(({ className, ...props }, ref) => {
 Textarea.displayName = "Textarea"
 
 export { Textarea }
+</file>
 
-================
-File: frontend/src/components/ui/toast.jsx
-================
+<file path="frontend/src/components/ui/toast.jsx">
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva } from "class-variance-authority";
@@ -4199,10 +4473,9 @@ const ToastDescription = React.forwardRef(({ className, ...props }, ref) => (
 ToastDescription.displayName = ToastPrimitives.Description.displayName
 
 export { ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription, ToastClose, ToastAction };
+</file>
 
-================
-File: frontend/src/components/ui/toaster.jsx
-================
+<file path="frontend/src/components/ui/toaster.jsx">
 import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
@@ -4236,10 +4509,9 @@ export function Toaster() {
     </ToastProvider>
   );
 }
+</file>
 
-================
-File: frontend/src/components/ui/toggle-group.jsx
-================
+<file path="frontend/src/components/ui/toggle-group.jsx">
 import * as React from "react"
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
 
@@ -4283,10 +4555,9 @@ const ToggleGroupItem = React.forwardRef(({ className, children, variant, size, 
 ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
 
 export { ToggleGroup, ToggleGroupItem }
+</file>
 
-================
-File: frontend/src/components/ui/toggle.jsx
-================
+<file path="frontend/src/components/ui/toggle.jsx">
 "use client"
 
 import * as React from "react"
@@ -4327,10 +4598,9 @@ const Toggle = React.forwardRef(({ className, variant, size, ...props }, ref) =>
 Toggle.displayName = TogglePrimitive.Root.displayName
 
 export { Toggle, toggleVariants }
+</file>
 
-================
-File: frontend/src/components/ui/tooltip.jsx
-================
+<file path="frontend/src/components/ui/tooltip.jsx">
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
@@ -4357,10 +4627,9 @@ const TooltipContent = React.forwardRef(({ className, sideOffset = 4, ...props }
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+</file>
 
-================
-File: frontend/src/hooks/use-toast.js
-================
+<file path="frontend/src/hooks/use-toast.js">
 "use client";
 // Inspired by react-hot-toast library
 import * as React from "react"
@@ -4516,20 +4785,524 @@ function useToast() {
 }
 
 export { useToast, toast }
+</file>
 
-================
-File: frontend/src/lib/utils.js
-================
+<file path="frontend/src/lib/utils.js">
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
+</file>
 
-================
-File: frontend/src/mock/mock.js
-================
+<file path="frontend/src/App.css">
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #0f0f10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+</file>
+
+<file path="frontend/src/index.js">
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+</file>
+
+<file path="frontend/.gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+</file>
+
+<file path="frontend/components.json">
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": false,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "iconLibrary": "lucide"
+}
+</file>
+
+<file path="frontend/craco.config.js">
+// Load configuration from environment or config file
+const path = require('path');
+
+// Environment variable overrides
+const config = {
+  disableHotReload: process.env.DISABLE_HOT_RELOAD === 'true',
+};
+
+module.exports = {
+  webpack: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+    configure: (webpackConfig) => {
+      
+      // Disable hot reload completely if environment variable is set
+      if (config.disableHotReload) {
+        // Remove hot reload related plugins
+        webpackConfig.plugins = webpackConfig.plugins.filter(plugin => {
+          return !(plugin.constructor.name === 'HotModuleReplacementPlugin');
+        });
+        
+        // Disable watch mode
+        webpackConfig.watch = false;
+        webpackConfig.watchOptions = {
+          ignored: /.*/, // Ignore all files
+        };
+      } else {
+        // Add ignored patterns to reduce watched directories
+        webpackConfig.watchOptions = {
+          ...webpackConfig.watchOptions,
+          ignored: [
+            '**/node_modules/**',
+            '**/.git/**',
+            '**/build/**',
+            '**/dist/**',
+            '**/coverage/**',
+            '**/public/**',
+          ],
+        };
+      }
+      
+      return webpackConfig;
+    },
+  },
+};
+</file>
+
+<file path="frontend/jsconfig.json">
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
+</file>
+
+<file path="frontend/postcss.config.js">
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+</file>
+
+<file path="frontend/README.md">
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# IDE and editors
+.idea/
+.vscode/
+
+# Dependencies
+node_modules/
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Production builds
+/build
+dist/
+dist
+
+# Environment files (comprehensive coverage)
+
+*token.json*
+*credentials.json*
+
+# Logs and debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dump.rdb
+
+# System files
+.DS_Store
+*.pem
+
+# Python
+__pycache__/
+*pyc*
+venv/
+.venv/
+
+# Development tools
+chainlit.md
+.chainlit
+.ipynb_checkpoints/
+.ac
+
+# Deployment
+.vercel
+
+# Data and databases
+agenthub/agents/youtube/db
+
+# Archive files and large assets
+**/*.zip
+**/*.tar.gz
+**/*.tar
+**/*.tgz
+*.pack
+*.deb
+*.dylib
+
+# Build caches
+.cache/
+
+# Mobile development
+android-sdk/
+</file>
+
+<file path="README.md">
+# Here are your Instructions
+</file>
+
+<file path="test_result.md">
+#====================================================================================================
+# START - Testing Protocol - DO NOT EDIT OR REMOVE THIS SECTION
+#====================================================================================================
+
+# THIS SECTION CONTAINS CRITICAL TESTING INSTRUCTIONS FOR BOTH AGENTS
+# BOTH MAIN_AGENT AND TESTING_AGENT MUST PRESERVE THIS ENTIRE BLOCK
+
+# Communication Protocol:
+# If the `testing_agent` is available, main agent should delegate all testing tasks to it.
+#
+# You have access to a file called `test_result.md`. This file contains the complete testing state
+# and history, and is the primary means of communication between main and the testing agent.
+#
+# Main and testing agents must follow this exact format to maintain testing data. 
+# The testing data must be entered in yaml format Below is the data structure:
+# 
+## user_problem_statement: {problem_statement}
+## backend:
+##   - task: "Task name"
+##     implemented: true
+##     working: true  # or false or "NA"
+##     file: "file_path.py"
+##     stuck_count: 0
+##     priority: "high"  # or "medium" or "low"
+##     needs_retesting: false
+##     status_history:
+##         -working: true  # or false or "NA"
+##         -agent: "main"  # or "testing" or "user"
+##         -comment: "Detailed comment about status"
+##
+## frontend:
+##   - task: "Task name"
+##     implemented: true
+##     working: true  # or false or "NA"
+##     file: "file_path.js"
+##     stuck_count: 0
+##     priority: "high"  # or "medium" or "low"
+##     needs_retesting: false
+##     status_history:
+##         -working: true  # or false or "NA"
+##         -agent: "main"  # or "testing" or "user"
+##         -comment: "Detailed comment about status"
+##
+## metadata:
+##   created_by: "main_agent"
+##   version: "1.0"
+##   test_sequence: 0
+##   run_ui: false
+##
+## test_plan:
+##   current_focus:
+##     - "Task name 1"
+##     - "Task name 2"
+##   stuck_tasks:
+##     - "Task name with persistent issues"
+##   test_all: false
+##   test_priority: "high_first"  # or "sequential" or "stuck_first"
+##
+## agent_communication:
+##     -agent: "main"  # or "testing" or "user"
+##     -message: "Communication message between agents"
+
+# Protocol Guidelines for Main agent
+#
+# 1. Update Test Result File Before Testing:
+#    - Main agent must always update the `test_result.md` file before calling the testing agent
+#    - Add implementation details to the status_history
+#    - Set `needs_retesting` to true for tasks that need testing
+#    - Update the `test_plan` section to guide testing priorities
+#    - Add a message to `agent_communication` explaining what you've done
+#
+# 2. Incorporate User Feedback:
+#    - When a user provides feedback that something is or isn't working, add this information to the relevant task's status_history
+#    - Update the working status based on user feedback
+#    - If a user reports an issue with a task that was marked as working, increment the stuck_count
+#    - Whenever user reports issue in the app, if we have testing agent and task_result.md file so find the appropriate task for that and append in status_history of that task to contain the user concern and problem as well 
+#
+# 3. Track Stuck Tasks:
+#    - Monitor which tasks have high stuck_count values or where you are fixing same issue again and again, analyze that when you read task_result.md
+#    - For persistent issues, use websearch tool to find solutions
+#    - Pay special attention to tasks in the stuck_tasks list
+#    - When you fix an issue with a stuck task, don't reset the stuck_count until the testing agent confirms it's working
+#
+# 4. Provide Context to Testing Agent:
+#    - When calling the testing agent, provide clear instructions about:
+#      - Which tasks need testing (reference the test_plan)
+#      - Any authentication details or configuration needed
+#      - Specific test scenarios to focus on
+#      - Any known issues or edge cases to verify
+#
+# 5. Call the testing agent with specific instructions referring to test_result.md
+#
+# IMPORTANT: Main agent must ALWAYS update test_result.md BEFORE calling the testing agent, as it relies on this file to understand what to test next.
+
+#====================================================================================================
+# END - Testing Protocol - DO NOT EDIT OR REMOVE THIS SECTION
+#====================================================================================================
+
+
+
+#====================================================================================================
+# Testing Data - Main Agent and testing sub agent both should log testing data below this section
+#====================================================================================================
+</file>
+
+<file path="frontend/src/components/landing/Header.jsx">
+import React, { useEffect, useState } from "react";
+import ShimmerButton from "../ui/ShimmerButton";
+import { NavigationMenu } from "../ui/navigation-menu"; // eslint-disable-line
+
+const navItems = [
+  { id: "how", label: "How it works" },
+  { id: "features", label: "Features" },
+  { id: "testimonials", label: "Testimonials" },
+  { id: "contact", label: "Contact" },
+];
+
+export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 p-3 md:p-4 font-roboto">
+      <div
+        className={`relative mx-auto max-w-[1280px] flex items-center justify-between px-6 py-2 rounded-full border transition-all duration-300 ${
+          scrolled
+            ? "border-neutral-700/50 backdrop-blur-xl bg-gradient-to-b from-neutral-900/50 to-neutral-950/40 shadow-lg"
+            : "border-transparent bg-transparent"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <img src="/eido-icon.png" alt="Eido AI Logo" className="h-8 w-8 rounded-md" />
+          <span className="text-[18px] font-semibold tracking-tight text-white">Eido AI</span>
+        </div>
+        
+        <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          {navItems.map((n) => (
+            <div key={n.id} className="flip-container" onClick={() => scrollTo(n.id)}>
+              <button
+                className="flipper text-neutral-300 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest"
+              >
+                <span className="front">{n.label}</span>
+                <span className="back">{n.label}</span>
+              </button>
+            </div>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <ShimmerButton
+            onClick={() => scrollTo("cta")}
+            variant="outline"
+            className="border-neutral-400 text-neutral-200 hover:bg-blue-950/80 hover:border-blue-500 hover:text-neutral-100 rounded-full"
+          >
+            <span className="uppercase text-xs tracking-widest font-bold">
+              Create your free account
+            </span>
+          </ShimmerButton>
+        </div>
+      </div>
+    </header>
+  );
+}
+</file>
+
+<file path="frontend/src/mock/mock.js">
 export const howSteps = [
   {
     id: 1,
@@ -4673,339 +5446,9 @@ export const testimonials = [
       "Finally, I don't have to skim through 20 different PDFs to find one equation. A total lifesaver.",
   },
 ];
+</file>
 
-================
-File: frontend/src/App.css
-================
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-================
-File: frontend/src/App.js
-================
-import React, { useEffect } from "react";
-import "./App.css";
-import axios from "axios";
-import Header from "./components/landing/Header";
-import { Hero, HowItWorks, Features, Testimonials, FinalCTA, Footer } from "./components/landing/Sections";
-import { Toaster } from "./components/ui/toaster";
-
-// The app will now default to its own relative /api path
-const API = "/api";
-
-function App() {
-  useEffect(() => {
-    const helloWorldApi = async () => {
-      try {
-        // This call will likely fail now unless you run the backend locally, which is expected.
-        const response = await axios.get(`${API}/`);
-        console.log(response.data.message);
-      } catch (e) {
-        console.error(e, `errored out requesting /api`);
-      }
-    };
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
-      <main>
-        <Hero />
-        <HowItWorks />
-        <Features />
-        <Testimonials />
-        <FinalCTA />
-      </main>
-      <Footer />
-      <Toaster />
-    </div>
-  );
-}
-
-export default App;
-
-================
-File: frontend/src/index.css
-================
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 240 10% 3.9%;
-    /* Dark background */
-    --foreground: 0 0% 98%;
-    /* Light text */
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 240 5.9% 10%; /* Eido charcoal for buttons */
-    --primary-foreground: 0 0% 98%;
-    /* Light text on buttons */
-
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%; /* Lighter border for dark mode */
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-
-    --radius: 0.5rem;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-/* Add these new styles for the shimmer effect */
-@layer utilities {
-  .shimmer-button {
-    @apply relative overflow-hidden transition-colors duration-300;
-  }
-
-  /* Define the spotlight pseudo-element */
-  .shimmer-button::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit; /* Match the button's border radius */
-
-    /* The radial gradient for the spotlight effect */
-    background: radial-gradient(
-      80px circle at var(--x) var(--y),
-      rgba(96, 165, 250, 0.25), /* Tailwind's blue-400 with 25% opacity */
-      transparent 70%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    pointer-events: none; /* Ensure it doesn't interfere with clicks */
-  }
-
-  /* Show the spotlight on hover */
-  .shimmer-button:hover::before {
-    opacity: 1;
-  }
-
-  /* --- FLIP ANIMATION STYLES --- */
-  .flip-container {
-    perspective: 1000px; /* Creates the 3D space */
-    cursor: pointer;
-  }
-
-  .flipper {
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.6s;
-  }
-
-  .flip-container:hover .flipper {
-    transform: rotateX(-180deg);
-  }
-
-  .front, .back {
-    display: block;
-    backface-visibility: hidden; /* Hides the back of the element when flipped */
-    position: relative;
-    padding: 2px 0;
-  }
-
-  .back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotateX(180deg);
-  }
-  /* --- END FLIP ANIMATION STYLES --- */
-}
-
-================
-File: frontend/src/index.js
-================
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
-
-================
-File: frontend/.gitignore
-================
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-================
-File: frontend/components.json
-================
-{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
-  "rsc": false,
-  "tsx": false,
-  "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "src/index.css",
-    "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  },
-  "iconLibrary": "lucide"
-}
-
-================
-File: frontend/craco.config.js
-================
-// Load configuration from environment or config file
-const path = require('path');
-
-// Environment variable overrides
-const config = {
-  disableHotReload: process.env.DISABLE_HOT_RELOAD === 'true',
-};
-
-module.exports = {
-  webpack: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-    configure: (webpackConfig) => {
-      
-      // Disable hot reload completely if environment variable is set
-      if (config.disableHotReload) {
-        // Remove hot reload related plugins
-        webpackConfig.plugins = webpackConfig.plugins.filter(plugin => {
-          return !(plugin.constructor.name === 'HotModuleReplacementPlugin');
-        });
-        
-        // Disable watch mode
-        webpackConfig.watch = false;
-        webpackConfig.watchOptions = {
-          ignored: /.*/, // Ignore all files
-        };
-      } else {
-        // Add ignored patterns to reduce watched directories
-        webpackConfig.watchOptions = {
-          ...webpackConfig.watchOptions,
-          ignored: [
-            '**/node_modules/**',
-            '**/.git/**',
-            '**/build/**',
-            '**/dist/**',
-            '**/coverage/**',
-            '**/public/**',
-          ],
-        };
-      }
-      
-      return webpackConfig;
-    },
-  },
-};
-
-================
-File: frontend/jsconfig.json
-================
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "include": ["src"]
-}
-
-================
-File: frontend/package.json
-================
+<file path="frontend/package.json">
 {
   "name": "frontend",
   "version": "0.1.0",
@@ -5094,94 +5537,9 @@ File: frontend/package.json
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
+</file>
 
-================
-File: frontend/postcss.config.js
-================
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}
-
-================
-File: frontend/README.md
-================
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-================
-File: frontend/tailwind.config.js
-================
+<file path="frontend/tailwind.config.js">
 const { fontFamily } = require("tailwindcss/defaultTheme");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -5263,216 +5621,317 @@ module.exports = {
           "0%": { transform: "translateX(-50%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "marquee-up": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "marquee-left": "marquee-left 60s linear infinite",
         "marquee-right": "marquee-right 60s linear infinite",
+        "marquee-up": "marquee-up 40s linear infinite",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 };
+</file>
 
-================
-File: .gitignore
-================
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+<file path="frontend/public/index.html">
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="description" content="Eido AI - Your Personal Education Copilot" />
 
-# IDE and editors
-.idea/
-.vscode/
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+        
+        <!-- ADD THREE.JS LIBRARY -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        
+        <title>Eido AI</title>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root"></div>
+        <script>
+            !(function (t, e) {
+                var o, n, p, r;
+                e.__SV ||
+                    ((window.posthog = e),
+                    (e._i = []),
+                    (e.init = function (i, s, a) {
+                        function g(t, e) {
+                            var o = e.split(".");
+                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
+                                (t[e] = function () {
+                                    t.push(
+                                        [e].concat(
+                                            Array.prototype.slice.call(
+                                                arguments,
+                                                0,
+                                            ),
+                                        ),
+                                    );
+                                });
+                        }
+                        ((p = t.createElement("script")).type =
+                            "text/javascript"),
+                            (p.crossOrigin = "anonymous"),
+                            (p.async = !0),
+                            (p.src =
+                                s.api_host.replace(
+                                    ".i.posthog.com",
+                                    "-assets.i.posthog.com",
+                                ) + "/static/array.js"),
+                            (r =
+                                t.getElementsByTagName(
+                                    "script",
+                                )[0]).parentNode.insertBefore(p, r);
+                        var u = e;
+                        for (
+                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
+                                u.people = u.people || [],
+                                u.toString = function (t) {
+                                    var e = "posthog";
+                                    return (
+                                        "posthog" !== a && (e += "." + a),
+                                        t || (e += " (stub)"),
+                                        e
+                                    );
+                                },
+                                u.people.toString = function () {
+                                    return u.toString(1) + ".people (stub)";
+                                },
+                                o =
+                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
+                                        " ",
+                                    ),
+                                n = 0;
+                            n < o.length;
+                            n++
+                        )
+                            g(u, o[n]);
+                        e._i.push([i, s, a]);
+                    }),
+                    (e.__SV = 1));
+            })(document, window.posthog || []);
+            posthog.init("phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE", {
+                api_host: "https://us.i.posthog.com",
+                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+            });
+        </script>
+    </body>
+</html>
+</file>
 
-# Dependencies
-node_modules/
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+<file path="frontend/src/index.css">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-# Testing
-/coverage
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    /* Dark background */
+    --foreground: 0 0% 98%;
+    /* Light text */
 
-# Next.js
-/.next/
-/out/
-next-env.d.ts
-*.tsbuildinfo
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
 
-# Production builds
-/build
-dist/
-dist
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
 
-# Environment files (comprehensive coverage)
+    --primary: 240 5.9% 10%; /* Eido charcoal for buttons */
+    --primary-foreground: 0 0% 98%;
+    /* Light text on buttons */
 
-*token.json*
-*credentials.json*
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-# Logs and debug files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-dump.rdb
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-# System files
-.DS_Store
-*.pem
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
 
-# Python
-__pycache__/
-*pyc*
-venv/
-.venv/
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
 
-# Development tools
-chainlit.md
-.chainlit
-.ipynb_checkpoints/
-.ac
+    --border: 240 3.7% 15.9%; /* Lighter border for dark mode */
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
 
-# Deployment
-.vercel
+    --radius: 0.5rem;
+  }
+}
 
-# Data and databases
-agenthub/agents/youtube/db
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 
-# Archive files and large assets
-**/*.zip
-**/*.tar.gz
-**/*.tar
-**/*.tgz
-*.pack
-*.deb
-*.dylib
+  /* --- GRAINY BACKGROUND EFFECT (REVISED) --- */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    /* Base64 encoded noise PNG, repeated over the screen */
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39sbGxVVVVPT09fadeInpaWmpqZNTU1MTExANDE6AAAAxUlEQVRIx+3UPQQAMAgEwSg2fP/29g5gTAnRbnk2P/ok3r9EM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iEM2iE911M9k2VLfG3AAAAAElFTkSuQmCC');
+    animation: grain 0.5s steps(1) infinite;
+  }
 
-# Build caches
-.cache/
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-1%, -2%); }
+    20% { transform: translate(-3%, 1%); }
+    30% { transform: translate(1%, -3%); }
+    40% { transform: translate(-1%, 3%); }
+    50% { transform: translate(-3%, 2%); }
+    60% { transform: translate(3%, 0%); }
+    70% { transform: translate(0%, 3%); }
+    80% { transform: translate(1%, 4%); }
+    90% { transform: translate(-2%, 2%); }
+  }
+  /* --- END GRAINY BACKGROUND EFFECT --- */
+}
 
-# Mobile development
-android-sdk/
+/* Add these new styles for the shimmer effect */
+@layer utilities {
+  .shimmer-button {
+    @apply relative overflow-hidden transition-colors duration-300;
+  }
 
-================
-File: README.md
-================
-# Here are your Instructions
+  /* Define the spotlight pseudo-element */
+  .shimmer-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit; /* Match the button's border radius */
 
-================
-File: test_result.md
-================
-#====================================================================================================
-# START - Testing Protocol - DO NOT EDIT OR REMOVE THIS SECTION
-#====================================================================================================
+    /* The radial gradient for the spotlight effect */
+    background: radial-gradient(
+      80px circle at var(--x) var(--y),
+      rgba(96, 165, 250, 0.25), /* Tailwind's blue-400 with 25% opacity */
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* Ensure it doesn't interfere with clicks */
+  }
 
-# THIS SECTION CONTAINS CRITICAL TESTING INSTRUCTIONS FOR BOTH AGENTS
-# BOTH MAIN_AGENT AND TESTING_AGENT MUST PRESERVE THIS ENTIRE BLOCK
+  /* Show the spotlight on hover */
+  .shimmer-button:hover::before {
+    opacity: 1;
+  }
+  
+  /* Custom utility to hide scrollbars */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 
-# Communication Protocol:
-# If the `testing_agent` is available, main agent should delegate all testing tasks to it.
-#
-# You have access to a file called `test_result.md`. This file contains the complete testing state
-# and history, and is the primary means of communication between main and the testing agent.
-#
-# Main and testing agents must follow this exact format to maintain testing data. 
-# The testing data must be entered in yaml format Below is the data structure:
-# 
-## user_problem_statement: {problem_statement}
-## backend:
-##   - task: "Task name"
-##     implemented: true
-##     working: true  # or false or "NA"
-##     file: "file_path.py"
-##     stuck_count: 0
-##     priority: "high"  # or "medium" or "low"
-##     needs_retesting: false
-##     status_history:
-##         -working: true  # or false or "NA"
-##         -agent: "main"  # or "testing" or "user"
-##         -comment: "Detailed comment about status"
-##
-## frontend:
-##   - task: "Task name"
-##     implemented: true
-##     working: true  # or false or "NA"
-##     file: "file_path.js"
-##     stuck_count: 0
-##     priority: "high"  # or "medium" or "low"
-##     needs_retesting: false
-##     status_history:
-##         -working: true  # or false or "NA"
-##         -agent: "main"  # or "testing" or "user"
-##         -comment: "Detailed comment about status"
-##
-## metadata:
-##   created_by: "main_agent"
-##   version: "1.0"
-##   test_sequence: 0
-##   run_ui: false
-##
-## test_plan:
-##   current_focus:
-##     - "Task name 1"
-##     - "Task name 2"
-##   stuck_tasks:
-##     - "Task name with persistent issues"
-##   test_all: false
-##   test_priority: "high_first"  # or "sequential" or "stuck_first"
-##
-## agent_communication:
-##     -agent: "main"  # or "testing" or "user"
-##     -message: "Communication message between agents"
+  /* --- FLIP ANIMATION STYLES --- */
+  .flip-container {
+    perspective: 1000px;
+    /* Creates the 3D space */
+    cursor: pointer;
+  }
 
-# Protocol Guidelines for Main agent
-#
-# 1. Update Test Result File Before Testing:
-#    - Main agent must always update the `test_result.md` file before calling the testing agent
-#    - Add implementation details to the status_history
-#    - Set `needs_retesting` to true for tasks that need testing
-#    - Update the `test_plan` section to guide testing priorities
-#    - Add a message to `agent_communication` explaining what you've done
-#
-# 2. Incorporate User Feedback:
-#    - When a user provides feedback that something is or isn't working, add this information to the relevant task's status_history
-#    - Update the working status based on user feedback
-#    - If a user reports an issue with a task that was marked as working, increment the stuck_count
-#    - Whenever user reports issue in the app, if we have testing agent and task_result.md file so find the appropriate task for that and append in status_history of that task to contain the user concern and problem as well 
-#
-# 3. Track Stuck Tasks:
-#    - Monitor which tasks have high stuck_count values or where you are fixing same issue again and again, analyze that when you read task_result.md
-#    - For persistent issues, use websearch tool to find solutions
-#    - Pay special attention to tasks in the stuck_tasks list
-#    - When you fix an issue with a stuck task, don't reset the stuck_count until the testing agent confirms it's working
-#
-# 4. Provide Context to Testing Agent:
-#    - When calling the testing agent, provide clear instructions about:
-#      - Which tasks need testing (reference the test_plan)
-#      - Any authentication details or configuration needed
-#      - Specific test scenarios to focus on
-#      - Any known issues or edge cases to verify
-#
-# 5. Call the testing agent with specific instructions referring to test_result.md
-#
-# IMPORTANT: Main agent must ALWAYS update test_result.md BEFORE calling the testing agent, as it relies on this file to understand what to test next.
+  .flipper {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+  }
 
-#====================================================================================================
-# END - Testing Protocol - DO NOT EDIT OR REMOVE THIS SECTION
-#====================================================================================================
+  .flip-container:hover .flipper {
+    transform: rotateX(-180deg);
+  }
 
+  .front,
+  .back {
+    display: block;
+    backface-visibility: hidden;
+    /* Hides the back of the element when flipped */
+    position: relative;
+    padding: 2px 0;
+  }
 
+  .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotateX(180deg);
+  }
+  /* --- END FLIP ANIMATION STYLES --- */
+}
+</file>
 
-#====================================================================================================
-# Testing Data - Main Agent and testing sub agent both should log testing data below this section
-#====================================================================================================
+<file path="frontend/src/App.js">
+import React, { useEffect } from "react";
+import "./App.css";
+import axios from "axios";
+import Header from "./components/landing/Header";
+import Hero from "./components/landing/sections/Hero";
+import HowItWorks from "./components/landing/sections/HowItWorks";
+import Features from "./components/landing/sections/Features";
+import Testimonials from "./components/landing/sections/Testimonials";
+import FinalCTA from "./components/landing/sections/FinalCTA";
+import Footer from "./components/landing/sections/Footer";
+import { Toaster } from "./components/ui/toaster";
 
+const API = "/api";
 
+function App() {
+  useEffect(() => {
+    const helloWorldApi = async () => {
+      try {
+        const response = await axios.get(`${API}/`);
+        console.log(response.data.message);
+      } catch (e) {
+        console.error(e, `errored out requesting /api`);
+      }
+    };
+    helloWorldApi();
+  }, []);
 
-================================================================
-End of Codebase
-================================================================
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main>
+        <Hero />
+        <HowItWorks />
+        <Features />
+        <Testimonials />
+        <FinalCTA />
+      </main>
+      <Footer />
+      <Toaster />
+    </div>
+  );
+}
+
+export default App;
+</file>
+
+</files>
