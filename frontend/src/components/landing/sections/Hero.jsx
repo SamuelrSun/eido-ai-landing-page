@@ -121,7 +121,7 @@ export default function Hero() {
                 <ShimmerButton
                   className="border border-blue-500 bg-blue-950/80 text-neutral-100 hover:border-blue-400"
                 >
-                  Start for Free
+                  Start for free
                 </ShimmerButton>
               </a>
               <ShimmerButton
